@@ -17,6 +17,16 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
     },
+    {
+      path: '/tailwind-test',
+      name: 'tailwind-test',
+      component: () => import('../views/TailwindTestView.vue'),
+    },
+    {
+      path: '/flowbite-test',
+      name: 'flowbite-test',
+      component: () => import('../views/FlowbiteTestView.vue'),
+    },
   ],
 })
 
