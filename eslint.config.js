@@ -5,6 +5,12 @@ import pluginPlaywright from 'eslint-plugin-playwright'
 import oxlint from 'eslint-plugin-oxlint'
 import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
 
+module.exports = {
+  rules: {
+    'vue/multi-word-component-names': 'off',
+  },
+}
+
 export default [
   {
     name: 'app/files-to-lint',
@@ -18,12 +24,12 @@ export default [
 
   ...pluginVue.configs['flat/essential'],
   ...vueTsEslintConfig(),
-  
+
   {
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],
   },
-  
+
   {
     ...pluginPlaywright.configs['flat/recommended'],
     files: ['e2e/**/*.{test,spec}.{js,ts,jsx,tsx}'],
