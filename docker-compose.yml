@@ -1,0 +1,14 @@
+services:
+  studio:
+    build: .
+    ports:
+      - 5173:5173
+    volumes:
+      - .:/studio
+    networks:
+      - squiglink
+
+networks:
+  squiglink:
+    external: true
+    name: squiglink
