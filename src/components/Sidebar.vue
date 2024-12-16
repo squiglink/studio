@@ -7,7 +7,10 @@ import { Icon } from '@iconify/vue'
   <fwb-sidebar class="relative border-solid border-r border-gray-700">
     <fwb-sidebar-logo name="Squiglink Studio" logo="/src/assets/logo.svg" tag="router-link" />
 
-    <fwb-sidebar-item to="/databases">
+    <fwb-sidebar-item
+      to="/databases"
+      :class="{ 'bg-gray-700': $route.path === '/databases' || $route.path === '/' }"
+    >
       <template #icon>
         <Icon icon="flowbite:layers-solid" width="24" height="24" class="text-gray-400" />
       </template>
@@ -15,7 +18,7 @@ import { Icon } from '@iconify/vue'
       <template #default>Databases</template>
     </fwb-sidebar-item>
 
-    <fwb-sidebar-item to="/brands">
+    <fwb-sidebar-item to="/brands" :class="{ 'bg-gray-700': $route.path === '/brands' }">
       <template #icon>
         <Icon icon="flowbite:grid-solid" width="24" height="24" class="text-gray-400" />
       </template>
@@ -23,7 +26,7 @@ import { Icon } from '@iconify/vue'
       <template #default>Brands</template>
     </fwb-sidebar-item>
 
-    <fwb-sidebar-item to="/models">
+    <fwb-sidebar-item to="/models" :class="{ 'bg-gray-700': $route.path === '/models' }">
       <template #icon>
         <Icon icon="flowbite:headphones-solid" width="24" height="24" class="text-gray-400" />
       </template>
