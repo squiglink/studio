@@ -1,8 +1,3 @@
-<script setup lang="ts">
-import { FwbSidebar, FwbSidebarItem, FwbSidebarLogo, FwbSidebarItemGroup } from 'flowbite-vue'
-import { Icon } from '@iconify/vue'
-</script>
-
 <template>
   <fwb-sidebar class="relative border-solid border-r border-gray-700">
     <fwb-sidebar-logo name="Squiglink Studio" logo="/src/assets/logo.svg" tag="router-link" />

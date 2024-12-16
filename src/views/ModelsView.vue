@@ -116,7 +116,22 @@ const tableValues = modelArray.map((model) => {
     <template #header-text>Models</template>
 
     <template #content>
-      <Table :columns="tableColumns" :data="tableValues" />
+      <Table :columns="tableColumns" :data="tableValues">
+        <template #actions>
+          <fwb-button color="red" size="xs">
+            Delete selected
+            <template #suffix>
+              <Icon icon="flowbite:minus-outline" width="24" height="24" />
+            </template>
+          </fwb-button>
+          <fwb-button color="default" size="xs">
+            Add new model
+            <template #suffix>
+              <Icon icon="flowbite:plus-outline" width="24" height="24" />
+            </template>
+          </fwb-button>
+        </template>
+      </Table>
     </template>
   </MainLayout>
 </template>

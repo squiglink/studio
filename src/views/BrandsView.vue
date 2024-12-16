@@ -63,7 +63,22 @@ const brandArray = apiPayload.map((item) => objectToCamel(item)) as BrandWithMod
     <template #header-text>Brands</template>
 
     <template #content>
-      <Table :columns="tableColumns" :data="brandArray" />
+      <Table :columns="tableColumns" :data="brandArray">
+        <template #actions>
+          <fwb-button color="red" size="xs">
+            Delete selected
+            <template #suffix>
+              <Icon icon="flowbite:minus-outline" width="24" height="24" />
+            </template>
+          </fwb-button>
+          <fwb-button color="default" size="xs">
+            Add new brand
+            <template #suffix>
+              <Icon icon="flowbite:plus-outline" width="24" height="24" />
+            </template>
+          </fwb-button>
+        </template>
+      </Table>
     </template>
   </MainLayout>
 </template>
