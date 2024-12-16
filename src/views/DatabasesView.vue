@@ -3,13 +3,6 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 import { objectToCamel } from 'ts-case-convert'
 
-const tableColumns = [
-  { name: 'Type', key: 'type', path: '/databases/' },
-  { name: 'Path', key: 'path' },
-  { name: 'Created At', key: 'createdAt' },
-  { name: 'Last modified', key: 'updatedAt' },
-]
-
 const apiPayload = [
   {
     id: 1,
@@ -32,6 +25,13 @@ const apiPayload = [
     created_at: '2021-10-01',
     updated_at: '2021-10-01',
   },
+]
+
+const tableColumns = [
+  { name: 'Type', key: 'type', path: '/databases/' },
+  { name: 'Path', key: 'path' },
+  { name: 'Created At', key: 'createdAt' },
+  { name: 'Last modified', key: 'updatedAt' },
 ]
 
 const databaseArray = apiPayload.map((item) => objectToCamel(item)) as Database[]

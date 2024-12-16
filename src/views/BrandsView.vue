@@ -3,13 +3,6 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 import { objectToCamel } from 'ts-case-convert'
 
-const tableColumns = [
-  { name: 'Brand', key: 'name', path: '/brands/' },
-  { name: 'Models', key: 'modelCount' },
-  { name: 'Created At', key: 'createdAt' },
-  { name: 'Last modified', key: 'updatedAt' },
-]
-
 const apiPayload = [
   {
     id: 1,
@@ -53,6 +46,13 @@ const apiPayload = [
     created_at: '2021-10-01',
     updated_at: '2021-10-01',
   },
+]
+
+const tableColumns = [
+  { name: 'Brand', key: 'name', path: '/brands/' },
+  { name: 'Models', key: 'modelCount' },
+  { name: 'Created At', key: 'createdAt' },
+  { name: 'Last modified', key: 'updatedAt' },
 ]
 
 const brandArray = apiPayload.map((item) => objectToCamel(item)) as BrandWithModelCount[]
