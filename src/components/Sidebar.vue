@@ -6,10 +6,12 @@ import { Icon } from '@iconify/vue'
 <template>
   <fwb-sidebar class="relative border-solid border-r border-gray-700">
     <fwb-sidebar-logo name="Squiglink Studio" logo="/src/assets/logo.svg" tag="router-link" />
+
     <fwb-sidebar-item to="/databases">
       <template #icon>
         <Icon icon="flowbite:layers-solid" width="24" height="24" class="text-gray-400" />
       </template>
+
       <template #default>Databases</template>
     </fwb-sidebar-item>
 
@@ -17,6 +19,7 @@ import { Icon } from '@iconify/vue'
       <template #icon>
         <Icon icon="flowbite:grid-solid" width="24" height="24" class="text-gray-400" />
       </template>
+
       <template #default>Brands</template>
     </fwb-sidebar-item>
 
@@ -24,6 +27,7 @@ import { Icon } from '@iconify/vue'
       <template #icon>
         <Icon icon="flowbite:headphones-solid" width="24" height="24" class="text-gray-400" />
       </template>
+
       <template #default>Models</template>
     </fwb-sidebar-item>
 

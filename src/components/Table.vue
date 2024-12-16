@@ -14,10 +14,10 @@
           :class="columnIndex === 0 ? 'w-1/2' : ''"
         >
           <fwb-a v-if="columnIndex === 0" :href="`${column.path}${item.id}`">
-            {{ getNestedValue(item, column.key) }}
+            {{ item[column.key] }}
           </fwb-a>
           <div v-else>
-            {{ getNestedValue(item, column.key) }}
+            {{ item[column.key] }}
           </div>
         </fwb-table-cell>
       </fwb-table-row>
@@ -36,18 +36,8 @@ import {
   FwbTableRow,
 } from 'flowbite-vue'
 
-interface Column {
-  name: string
-  key: string
-  path?: string
-}
-
 const props = defineProps<{
-  columns: Column[]
+  columns: TableColumn[]
   data: any[]
 }>()
-
-function getNestedValue(obj: any, key: string): any {
-  return key.split('.').reduce((o, i) => (o ? o[i] : undefined), obj)
-}
 </script>

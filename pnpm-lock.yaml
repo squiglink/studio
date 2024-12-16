@@ -20,6 +20,9 @@ importers:
       pinia:
         specifier: ^2.2.6
         version: 2.2.6(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+      ts-case-convert:
+        specifier: ^2.1.0
+        version: 2.1.0
       vue:
         specifier: ^3.5.12
         version: 3.5.13(typescript@5.6.3)
@@ -2148,6 +2151,9 @@ packages:
     engines: {node: '>=16'}
     peerDependencies:
       typescript: '>=4.2.0'
+
+  ts-case-convert@2.1.0:
+    resolution: {integrity: sha512-Ye79el/pHYXfoew6kqhMwCoxp4NWjKNcm2kBzpmEMIU9dd9aBmHNNFtZ+WTm0rz1ngyDmfqDXDlyUnBXayiD0w==}
 
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
@@ -4442,6 +4448,8 @@ snapshots:
   ts-api-utils@1.4.1(typescript@5.6.3):
     dependencies:
       typescript: 5.6.3
+
+  ts-case-convert@2.1.0: {}
 
   ts-interface-checker@0.1.13: {}
 
