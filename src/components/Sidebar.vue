@@ -35,7 +35,7 @@ import { Icon } from '@iconify/vue'
     </fwb-sidebar-item>
 
     <fwb-sidebar-item-group border>
-      <fwb-sidebar-item class="py-1">
+      <fwb-sidebar-item class="py-1" link="/" tag="a" target="_blank">
         <template #icon>
           <Icon
             icon="flowbite:arrow-up-right-from-square-outline"
@@ -48,7 +48,12 @@ import { Icon } from '@iconify/vue'
         <template #default>Open my database</template>
       </fwb-sidebar-item>
 
-      <fwb-sidebar-item class="py-1" link="https://squiglink.github.io/documentation/" tag="a">
+      <fwb-sidebar-item
+        class="py-1"
+        link="https://squiglink.github.io/documentation/"
+        tag="a"
+        target="_blank"
+      >
         <template #icon>
           <Icon icon="flowbite:file-lines-outline" width="24" height="24" class="text-gray-400" />
         </template>
