@@ -3,13 +3,13 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 
 const tableColumns = [
-  { name: 'Type', key: 'type' },
+  { name: 'Type', key: 'type', path: '/databases/' },
   { name: 'Path', key: 'path' },
   { name: 'Created At', key: 'created_at' },
   { name: 'Last modified', key: 'updated_at' },
 ]
 
-const api_payload = [
+const apiPayload = [
   {
     id: 1,
     type: 'IEMs',
@@ -39,7 +39,7 @@ const api_payload = [
     <template #header-text>Databases</template>
 
     <template #content>
-      <Table :columns="tableColumns" :data="api_payload" />
+      <Table :columns="tableColumns" :data="apiPayload" />
     </template>
   </MainLayout>
 </template>

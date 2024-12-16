@@ -3,13 +3,13 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 
 const tableColumns = [
-  { name: 'Model', key: 'model' },
+  { name: 'Model', key: 'model', path: '/models/' },
   { name: 'Brand', key: 'brand.name' },
   { name: 'Created At', key: 'created_at' },
   { name: 'Last modified', key: 'updated_at' },
 ]
 
-const api_payload = [
+const apiPayload = [
   {
     id: 1,
     model: 'Dioko',
@@ -86,8 +86,9 @@ const api_payload = [
 <template>
   <MainLayout>
     <template #header-text>Models</template>
+
     <template #content>
-      <Table :columns="tableColumns" :data="api_payload" />
+      <Table :columns="tableColumns" :data="apiPayload" />
     </template>
   </MainLayout>
 </template>

@@ -3,13 +3,13 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 
 const tableColumns = [
-  { name: 'Brand', key: 'brand' },
+  { name: 'Brand', key: 'brand', path: '/brands/' },
   { name: 'Models', key: 'model_count' },
   { name: 'Created At', key: 'created_at' },
   { name: 'Last modified', key: 'updated_at' },
 ]
 
-const api_payload = [
+const apiPayload = [
   {
     id: 1,
     brand: '7Hz',
@@ -25,27 +25,28 @@ const api_payload = [
     updated_at: '2021-10-01',
   },
   {
+    id: 3,
     brand: 'Aful Acoustics',
     model_count: 5,
     created_at: '2021-10-01',
     updated_at: '2021-10-01',
   },
   {
-    id: 3,
+    id: 4,
     brand: 'Apple',
     model_count: 2,
     created_at: '2021-10-01',
     updated_at: '2021-10-01',
   },
   {
-    id: 4,
+    id: 5,
     brand: 'Campfire Audio',
     model_count: 4,
     created_at: '2021-10-01',
     updated_at: '2021-10-01',
   },
   {
-    id: 5,
+    id: 6,
     brand: 'Dunu',
     model_count: 21,
     created_at: '2021-10-01',
@@ -57,8 +58,9 @@ const api_payload = [
 <template>
   <MainLayout>
     <template #header-text>Brands</template>
+
     <template #content>
-      <Table :columns="tableColumns" :data="api_payload" />
+      <Table :columns="tableColumns" :data="apiPayload" />
     </template>
   </MainLayout>
 </template>
