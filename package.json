@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@fontsource/inter": "^5.1.0",
+    "axios": "^1.7.9",
     "flowbite": "^2.5.2",
     "flowbite-vue": "^0.1.6",
     "pinia": "^2.2.6",
@@ -30,7 +31,7 @@
     "@playwright/test": "^1.48.2",
     "@tsconfig/node22": "^22.0.0",
     "@types/jsdom": "^21.1.7",
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.9.3",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vitest/eslint-plugin": "1.1.7",
     "@vue/eslint-config-prettier": "^10.1.0",

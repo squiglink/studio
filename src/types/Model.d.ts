@@ -1,7 +1,4 @@
-interface Model {
-  id: number
-  name: string
-  brand: Brand
-  createdAt: string
-  updatedAt: string
+export type Model = {
+  name: string;
+  brandName: string;
 }

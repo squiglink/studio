@@ -1,40 +1,31 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { databasesApi } from '@/utils/api/databases'
+
+import type { APIDatabase } from '@/utils/api/databases'
+
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
-import { objectToCamel } from 'ts-case-convert'
-
-const apiPayload = [
-  {
-    id: 1,
-    type: 'IEMs',
-    path: '/',
-    created_at: '2021-10-01',
-    updated_at: '2021-10-01',
-  },
-  {
-    id: 2,
-    type: 'Headphones',
-    path: '/headphones/',
-    created_at: '2021-10-01',
-    updated_at: '2021-10-01',
-  },
-  {
-    id: 3,
-    type: 'Earbuds',
-    path: '/earbuds/',
-    created_at: '2021-10-01',
-    updated_at: '2021-10-01',
-  },
-]
 
 const tableColumns = [
-  { name: 'Type', key: 'type', path: '/databases/' },
+  { name: 'Kind', key: 'kind', path: '/databases/' },
   { name: 'Path', key: 'path' },
-  { name: 'Created At', key: 'createdAt' },
-  { name: 'Last modified', key: 'updatedAt' },
+  // { name: 'Created At', key: 'createdAt' },
+  // { name: 'Last modified', key: 'updatedAt' },
 ]
 
-const databaseArray = apiPayload.map((item) => objectToCamel(item)) as Database[]
+let databases = ref([] as APIDatabase[]);
+let page = ref(1);
+let pageCount = ref(1);
+
+const fetchBrands = async () => {
+  databases.value = (await databasesApi.all(page.value)).page;
+  pageCount.value = (await databasesApi.all(page.value)).page_count;
+}
+
+onMounted(() => {
+  fetchBrands();
+})
 </script>
 
 <template>
@@ -42,7 +33,7 @@ const databaseArray = apiPayload.map((item) => objectToCamel(item)) as Database[
     <template #header-text>Databases</template>
 
     <template #content>
-      <Table :columns="tableColumns" :data="databaseArray" />
+      <Table :columns="tableColumns" :data="databases" />
     </template>
   </MainLayout>
 </template>

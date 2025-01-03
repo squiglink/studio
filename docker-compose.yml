@@ -7,6 +7,8 @@ services:
       - .:/studio
     networks:
       - squiglink
+    environment:
+      - VITE_BASE_API_URL=http://localhost:3000
 
 networks:
   squiglink:
