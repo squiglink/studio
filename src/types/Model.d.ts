@@ -1,5 +1,5 @@
 export type Model = {
-  id: number;
-  name: string;
-  brandName: string;
+  id: number
+  name: string
+  brandName: string
 }

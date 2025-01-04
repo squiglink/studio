@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { brandsApi } from '@/utils/api/brands';
-import { ref, onMounted  } from 'vue';
+import { brandsApi } from '@/utils/api/brands'
+import { ref, onMounted } from 'vue'
 
-import type { APIBrand, APIBrands } from '@/utils/api/brands';
+import type { APIBrand, APIBrands } from '@/utils/api/brands'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
-import Loader from '@/components/Loader.vue';
+import Loader from '@/components/Loader.vue'
 
 const tableColumns = [
   { name: 'Brand', key: 'name', path: '/brands/' },
@@ -15,28 +15,28 @@ const tableColumns = [
   { name: 'Last modified', key: 'updatedAt' },
 ]
 
-const brands = ref([] as APIBrand[]);
-const page = ref(1);
-const pageCount = ref(1);
-const loading = ref(false);
-const fetchFailed = ref(false);
+const brands = ref([] as APIBrand[])
+const page = ref(1)
+const pageCount = ref(1)
+const loading = ref(false)
+const fetchFailed = ref(false)
 
 const fetchBrands = async () => {
-  loading.value = true;
+  loading.value = true
   const response = await brandsApi.all(page.value).catch(() => {
-    fetchFailed.value = true;
-    loading.value = false;
+    fetchFailed.value = true
+    loading.value = false
 
-    return <APIBrands>{};
-  });
+    return <APIBrands>{}
+  })
 
-  brands.value = response.page;
-  pageCount.value = response.page_count;
-  loading.value = false;
+  brands.value = response.page
+  pageCount.value = response.page_count
+  loading.value = false
 }
 
 onMounted(() => {
-  fetchBrands();
+  fetchBrands()
 })
 </script>
 

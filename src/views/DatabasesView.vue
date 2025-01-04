@@ -15,28 +15,28 @@ const tableColumns = [
   { name: 'Last modified', key: 'updatedAt' },
 ]
 
-const databases = ref([] as APIDatabase[]);
-const page = ref(1);
-const pageCount = ref(1);
-const loading = ref(false);
-const fetchFailed = ref(false);
+const databases = ref([] as APIDatabase[])
+const page = ref(1)
+const pageCount = ref(1)
+const loading = ref(false)
+const fetchFailed = ref(false)
 
 const fetchBrands = async () => {
-  loading.value = true;
+  loading.value = true
   const response = await databasesApi.all(page.value).catch(() => {
-    fetchFailed.value = true;
-    loading.value = false;
+    fetchFailed.value = true
+    loading.value = false
 
-    return <APIDatabases>{};
-  });
+    return <APIDatabases>{}
+  })
 
-  databases.value = response.page;
-  pageCount.value = response.page_count;
-  loading.value = false;
+  databases.value = response.page
+  pageCount.value = response.page_count
+  loading.value = false
 }
 
 onMounted(() => {
-  fetchBrands();
+  fetchBrands()
 })
 </script>
 
