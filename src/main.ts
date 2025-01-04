@@ -25,20 +25,25 @@ import {
 
 const app = createApp(App)
 
-app
-  .component('Icon', Icon)
-  .component('FwbSidebar', FwbSidebar)
-  .component('FwbSidebarItem', FwbSidebarItem)
-  .component('FwbSidebarLogo', FwbSidebarLogo)
-  .component('FwbSidebarItemGroup', FwbSidebarItemGroup)
-  .component('FwbButton', FwbButton)
-  .component('FwbA', FwbA)
-  .component('FwbTable', FwbTable)
-  .component('FwbTableBody', FwbTableBody)
-  .component('FwbTableCell', FwbTableCell)
-  .component('FwbTableHead', FwbTableHead)
-  .component('FwbTableHeadCell', FwbTableHeadCell)
-  .component('FwbTableRow', FwbTableRow)
+const components = {
+  Icon,
+  FwbSidebar,
+  FwbSidebarItem,
+  FwbSidebarLogo,
+  FwbSidebarItemGroup,
+  FwbButton,
+  FwbA,
+  FwbTable,
+  FwbTableBody,
+  FwbTableCell,
+  FwbTableHead,
+  FwbTableHeadCell,
+  FwbTableRow
+}
+
+Object.entries(components).forEach(([name, component]) => {
+  app.component(name, component)
+})
 
 app.use(createPinia())
 app.use(router)

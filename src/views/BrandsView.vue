@@ -31,7 +31,7 @@ onMounted(() => {
     <template #header-text>Brands</template>
 
     <template #content>
-      <Table :columns="tableColumns" :data="brands">
+      <Table :columns="tableColumns" :data="brands" :selectable-rows="true">
         <template #actions>
           <fwb-button color="red" size="xs">
             Delete selected

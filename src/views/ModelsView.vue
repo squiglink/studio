@@ -22,6 +22,7 @@ let pageCount = ref(1);
 const fetchModels = async () => {
   let response = (await modelsApi.all(page.value));
   models.value = response.page.map((model: APIModel) => <Model>{
+    id: model.id,
     name: model.name,
     brandName: model.brand.name,
   });
@@ -39,7 +40,7 @@ onMounted(() => {
     <template #header-text>Models</template>
 
     <template #content>
-      <Table :columns="tableColumns" :data="models">
+      <Table :columns="tableColumns" :data="models" :selectable-rows="true">
         <template #actions>
           <fwb-button color="red" size="xs">
             Delete selected
