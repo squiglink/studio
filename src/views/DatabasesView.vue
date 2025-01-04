@@ -2,25 +2,37 @@
 import { onMounted, ref } from 'vue'
 import { databasesApi } from '@/utils/api/databases'
 
-import type { APIDatabase } from '@/utils/api/databases'
+import type { APIDatabase, APIDatabases } from '@/utils/api/databases'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
+import Loader from '@/components/Loader.vue'
 
 const tableColumns = [
   { name: 'Kind', key: 'kind', path: '/databases/' },
   { name: 'Path', key: 'path' },
-  // { name: 'Created At', key: 'createdAt' },
-  // { name: 'Last modified', key: 'updatedAt' },
+  { name: 'Created At', key: 'createdAt' },
+  { name: 'Last modified', key: 'updatedAt' },
 ]
 
-let databases = ref([] as APIDatabase[]);
-let page = ref(1);
-let pageCount = ref(1);
+const databases = ref([] as APIDatabase[]);
+const page = ref(1);
+const pageCount = ref(1);
+const loading = ref(false);
+const fetchFailed = ref(false);
 
 const fetchBrands = async () => {
-  databases.value = (await databasesApi.all(page.value)).page;
-  pageCount.value = (await databasesApi.all(page.value)).page_count;
+  loading.value = true;
+  const response = await databasesApi.all(page.value).catch(() => {
+    fetchFailed.value = true;
+    loading.value = false;
+
+    return <APIDatabases>{};
+  });
+
+  databases.value = response.page;
+  pageCount.value = response.page_count;
+  loading.value = false;
 }
 
 onMounted(() => {
@@ -33,7 +45,11 @@ onMounted(() => {
     <template #header-text>Databases</template>
 
     <template #content>
-      <Table :columns="tableColumns" :data="databases" />
+      <Loader v-if="loading" />
+      <div v-else-if="fetchFailed" class="flex text-white justify-center items-center p-4">
+        Failed to load databases
+      </div>
+      <Table v-else :columns="tableColumns" :data="databases" />
     </template>
   </MainLayout>
 </template>

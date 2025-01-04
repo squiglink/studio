@@ -11,9 +11,9 @@ const props = defineProps<{
 
 const selectedRows = ref([]);
 
-// watch(selectedRows, (newValue) => {
-//   console.log(newValue)
-// })
+watch(selectedRows, (newValue) => {
+  console.log(newValue)
+})
 </script>
 
 <template>

@@ -2,31 +2,42 @@
 import { ref, onMounted } from 'vue';
 import { modelsApi } from '@/utils/api/models';
 
-import type { APIModel } from '@/utils/api/models';
+import type { APIModel, APIModels } from '@/utils/api/models';
 import type { Model } from '@/types/Model';
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
+import Loader from '@/components/Loader.vue';
 
 const tableColumns = [
   { name: 'Name', key: 'name', path: '/models/' },
   { name: 'Brand', key: 'brandName' },
-  // { name: 'Created At', key: 'createdAt' },
-  // { name: 'Last modified', key: 'updatedAt' },
+  { name: 'Created At', key: 'createdAt' },
+  { name: 'Last modified', key: 'updatedAt' },
 ]
 
-let models = ref([] as Model[]);
-let page = ref(1);
-let pageCount = ref(1);
+const models = ref([] as Model[]);
+const page = ref(1);
+const pageCount = ref(1);
+const loading = ref(false);
+const fetchFailed = ref(false);
 
 const fetchModels = async () => {
-  let response = (await modelsApi.all(page.value));
+  loading.value = true;
+  let response = await modelsApi.all(page.value).catch(() => {
+    fetchFailed.value = true;
+    loading.value = false;
+
+    return <APIModels>{};
+  });
+
   models.value = response.page.map((model: APIModel) => <Model>{
     id: model.id,
     name: model.name,
     brandName: model.brand.name,
   });
   pageCount.value = response.page_count;
+  loading.value = false;
 }
 
 
@@ -40,7 +51,11 @@ onMounted(() => {
     <template #header-text>Models</template>
 
     <template #content>
-      <Table :columns="tableColumns" :data="models" :selectable-rows="true">
+      <Loader v-if="loading" />
+      <div v-else-if="fetchFailed" class="flex text-white justify-center items-center p-4">
+        Failed to load models
+      </div>
+      <Table v-else :columns="tableColumns" :data="models" :selectable-rows="true">
         <template #actions>
           <fwb-button color="red" size="xs">
             Delete selected

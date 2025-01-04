@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import { env } from "process";
+import { toast } from 'vue3-toastify';
 
 export type ClientError = {
   errors: string[];
@@ -16,7 +16,16 @@ export interface APIPage<T> {
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
-  timeout: 1000
+  timeout: 5000,
 });
 
-console.log()
+apiClient.interceptors.response.use((response) => response, (error) => {
+  toast(`${error.name}: ${error.message} (${error.code})`, {
+    "theme": "dark",
+    "type": "error",
+    "position": "bottom-right",
+    "dangerouslyHTMLString": true
+  });
+
+  throw error;
+});
