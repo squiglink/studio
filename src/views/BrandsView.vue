@@ -7,6 +7,7 @@ import type { APIBrand, APIBrands } from '@/utils/api/brands'
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 import Loader from '@/components/Loader.vue'
+import NetworkError from '@/components/NetworkError.vue'
 
 const tableColumns = [
   { name: 'Brand', key: 'name', path: '/brands/' },
@@ -45,14 +46,12 @@ onMounted(() => {
 
 <template>
   <MainLayout>
-    <template #header-text>Brands</template>
+    <template #header-text v-if="!fetchFailed">Brands</template>
 
     <template #content>
       <Loader v-if="loading" />
-      <div v-else-if="fetchFailed" class="flex text-white justify-center items-center p-4">
-        Failed to load brands
-      </div>
-      <Table v-else :columns="tableColumns" :data="brands" :selectable-rows="true">
+      <NetworkError v-else-if="fetchFailed"/>
+      <Table v-else :columns="tableColumns" :data="brands" :selectable-rows="false">
         <template #actions>
           <fwb-button color="red" size="xs">
             Delete selected

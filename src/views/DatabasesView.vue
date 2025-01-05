@@ -7,6 +7,7 @@ import type { APIDatabase, APIDatabases } from '@/utils/api/databases'
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 import Loader from '@/components/Loader.vue'
+import NetworkError from '@/components/NetworkError.vue'
 
 const tableColumns = [
   { name: 'Kind', key: 'kind', path: '/databases/' },
@@ -45,13 +46,11 @@ onMounted(() => {
 
 <template>
   <MainLayout>
-    <template #header-text>Databases</template>
+    <template #header-text v-if="!fetchFailed">Databases</template>
 
     <template #content>
       <Loader v-if="loading" />
-      <div v-else-if="fetchFailed" class="flex text-white justify-center items-center p-4">
-        Failed to load databases
-      </div>
+      <NetworkError v-else-if="fetchFailed"/>
       <Table v-else :columns="tableColumns" :data="databases" />
     </template>
   </MainLayout>

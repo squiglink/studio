@@ -8,6 +8,7 @@ import type { Model } from '@/types/Model'
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 import Loader from '@/components/Loader.vue'
+import NetworkError from '@/components/NetworkError.vue'
 
 const tableColumns = [
   { name: 'Name', key: 'name', path: '/models/' },
@@ -53,14 +54,12 @@ onMounted(() => {
 
 <template>
   <MainLayout>
-    <template #header-text>Models</template>
+    <template #header-text v-if="!fetchFailed">Models</template>
 
     <template #content>
       <Loader v-if="loading" />
-      <div v-else-if="fetchFailed" class="flex text-white justify-center items-center p-4">
-        Failed to load models
-      </div>
-      <Table v-else :columns="tableColumns" :data="models" :selectable-rows="true">
+      <NetworkError v-else-if="fetchFailed"/>
+      <Table v-else :columns="tableColumns" :data="models" :selectable-rows="false">
         <template #actions>
           <fwb-button color="red" size="xs">
             Delete selected
