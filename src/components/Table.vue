@@ -13,7 +13,7 @@ const selectedRows = ref([])
 </script>
 
 <template>
-  <div class="p-4">
+  <div>
     <TableActions>
       <template #search>
         <TableSearch />
@@ -23,7 +23,8 @@ const selectedRows = ref([])
         <slot name="actions" />
       </template>
     </TableActions>
-    <fwb-table hoverable class="!rounded-t-none">
+
+    <fwb-table hoverable class="rounded-lg !rounded-t-none">
       <fwb-table-head>
         <fwb-table-head-cell v-if="selectableRows"> # </fwb-table-head-cell>
 

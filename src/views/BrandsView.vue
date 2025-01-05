@@ -53,16 +53,16 @@ onMounted(() => {
       <NetworkError v-else-if="fetchFailed"/>
       <Table v-else :columns="tableColumns" :data="brands" :selectable-rows="false">
         <template #actions>
-          <fwb-button color="red" size="xs">
+          <!-- <fwb-button color="red" size="xs">
             Delete selected
             <template #suffix>
               <Icon icon="flowbite:minus-outline" width="24" height="24" />
             </template>
-          </fwb-button>
-          <fwb-button color="default" size="xs">
+          </fwb-button> -->
+          <fwb-button color="default" size="md">
             Add new brand
             <template #suffix>
-              <Icon icon="flowbite:plus-outline" width="24" height="24" />
+              <Icon icon="flowbite:plus-outline" width="16" height="16" />
             </template>
           </fwb-button>
         </template>

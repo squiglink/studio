@@ -1,18 +1,4 @@
-<script setup lang="ts">
-import { initFlowbite } from 'flowbite';
-import { onMounted } from 'vue';
-
-onMounted(() => {
-  initFlowbite();
-});
-</script>
-
 <template>
-  <fwb-button color="alternative" data-drawer-target="main-sidebar" data-drawer-toggle="main-sidebar" aria-controls="main-sidebar"
-              class="inline-flex items-center p-2 mt-2 ms-3 rounded-lg sm:hidden">
-    <Icon icon="flowbite:bars-from-left-outline" width="24" height="24" />
-  </fwb-button>
-
   <fwb-sidebar id="main-sidebar" class="w-72 fixed top-0 left-0 z-40 border-solid border-r border-gray-700 transition-transform -translate-x-full sm:translate-x-0">
     <fwb-sidebar-logo name="Squiglink Studio" logo="/src/assets/logo.svg" tag="router-link" />
 
