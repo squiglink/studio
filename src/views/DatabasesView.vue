@@ -12,7 +12,7 @@ import NetworkError from '@/components/NetworkError.vue'
 const tableColumns = [
   { name: 'Kind', key: 'kind', path: '/databases/' },
   { name: 'Path', key: 'path' },
-  { name: 'Created At', key: 'createdAt' },
+  { name: 'Created', key: 'createdAt' },
   { name: 'Last modified', key: 'updatedAt' },
 ]
 
