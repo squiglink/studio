@@ -8,9 +8,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <button data-drawer-target="main-sidebar" data-drawer-toggle="main-sidebar" aria-controls="main-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+  <fwb-button color="alternative" data-drawer-target="main-sidebar" data-drawer-toggle="main-sidebar" aria-controls="main-sidebar"
+              class="inline-flex items-center p-2 mt-2 ms-3 rounded-lg sm:hidden">
     <Icon icon="flowbite:bars-from-left-outline" width="24" height="24" />
-  </button>
+  </fwb-button>
 
   <fwb-sidebar id="main-sidebar" class="w-72 fixed top-0 left-0 z-40 border-solid border-r border-gray-700 transition-transform -translate-x-full sm:translate-x-0">
     <fwb-sidebar-logo name="Squiglink Studio" logo="/src/assets/logo.svg" tag="router-link" />
