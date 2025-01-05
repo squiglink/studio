@@ -28,7 +28,10 @@ const fetchModels = async () => {
     fetchFailed.value = true
     loading.value = false
 
-    return <APIModels>{}
+    return <APIModels>{
+      page: [],
+      page_count: 0,
+    }
   })
 
   models.value = response.page.map(

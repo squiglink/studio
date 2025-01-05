@@ -27,7 +27,10 @@ const fetchBrands = async () => {
     fetchFailed.value = true
     loading.value = false
 
-    return <APIDatabases>{}
+    return <APIDatabases>{
+      page: [],
+      page_count: 0,
+    }
   })
 
   databases.value = response.page
