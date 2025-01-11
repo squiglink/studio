@@ -3,7 +3,6 @@ import { ref, onMounted } from 'vue'
 import { modelsApi } from '@/utils/api/models'
 
 import type { APIModel, APIModels } from '@/utils/api/models'
-import type { Model } from '@/types/Model'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
@@ -12,12 +11,12 @@ import NetworkError from '@/components/NetworkError.vue'
 
 const tableColumns = [
   { name: 'Name', key: 'name', path: '/models/' },
-  { name: 'Brand', key: 'brandName' },
+  { name: 'Brand', nestedKey: ['brand', 'name'] },
   { name: 'Created', key: 'createdAt' },
   { name: 'Last modified', key: 'updatedAt' },
 ]
 
-const models = ref([] as Model[])
+const models = ref([] as APIModel[])
 const page = ref(1)
 const pageCount = ref(1)
 const loading = ref(false)
@@ -35,19 +34,13 @@ const fetchModels = async () => {
     }
   })
 
-  models.value = response.page.map(
-    (model: APIModel) =>
-      <Model>{
-        id: model.id,
-        name: model.name,
-        brandName: model.brand.name,
-      },
-  )
+  models.value = response.page
   pageCount.value = response.page_count
   loading.value = false
 }
 
 onMounted(() => {
+  console.log('fetching models')
   fetchModels()
 })
 </script>
@@ -59,7 +52,7 @@ onMounted(() => {
     <template #content>
       <Loader v-if="loading" />
       <NetworkError v-else-if="fetchFailed"/>
-      <Table v-else :columns="tableColumns" :data="models" :selectable-rows="false">
+      <Table v-else v-model="models" search-url="/models" :columns="tableColumns" :selectable-rows="false">
         <template #actions>
           <!-- <fwb-button color="red" size="xs">
             Delete selected

@@ -1,5 +1,6 @@
 interface TableColumn {
   name: string
-  key: string
+  key?: string
+  nestedKey?: string[]
   path?: string
 }

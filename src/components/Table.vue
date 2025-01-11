@@ -5,18 +5,19 @@ import TableSearch from './table/Search.vue'
 
 const props = defineProps<{
   columns: TableColumn[]
-  data: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
   selectableRows?: boolean
+  searchUrl?: string
 }>()
 
+const tableRows = defineModel<object[]>()
 const selectedRows = ref([])
 </script>
 
 <template>
   <div>
     <TableActions>
-      <template #search>
-        <TableSearch />
+      <template #search v-if="searchUrl">
+        <TableSearch v-model="tableRows" :search-url="searchUrl" />
       </template>
 
       <template #actions>
@@ -34,13 +35,15 @@ const selectedRows = ref([])
       </fwb-table-head>
 
       <fwb-table-body>
-        <fwb-table-row v-for="(item, index) in data" :key="item.id">
+        <fwb-table-row v-for="(item, index) in tableRows" :key="item['id' as keyof typeof item]">
           <fwb-table-cell v-if="selectableRows" class="w-4 p-4">
             <input
               v-model="selectedRows"
               type="checkbox"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded \ focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 \ dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              :value="item.id"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded \
+                     focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 \
+                     dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              :value="item['id' as keyof typeof item]"
               :id="`checkbox-table-${index}`"
             />
           </fwb-table-cell>
@@ -51,11 +54,15 @@ const selectedRows = ref([])
             :key="column.name"
             :class="columnIndex === 0 ? 'w-1/2' : ''"
           >
-            <fwb-a v-if="columnIndex === 0" :href="`${column.path}${item.id}`">
-              {{ item[column.key] }}
+            <fwb-a v-if="columnIndex === 0" :href="`${column.path}${item['id' as keyof typeof item]}`">
+              {{ item[column.key as keyof typeof item] }}
             </fwb-a>
             <div v-else>
-              {{ item[column.key] }}
+              {{
+                column.nestedKey
+                  ? column.nestedKey.reduce((resultObj, key) => resultObj[key as keyof typeof resultObj], item)
+                  : item[column.key as keyof typeof item]
+              }}
             </div>
           </fwb-table-cell>
         </fwb-table-row>

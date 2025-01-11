@@ -23,6 +23,7 @@ import {
   FwbTableRow,
   FwbSpinner,
   FwbAlert,
+  FwbInput,
 } from 'flowbite-vue'
 
 import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
@@ -46,6 +47,7 @@ const components = {
   FwbTableHeadCell,
   FwbTableRow,
   FwbSpinner,
+  FwbInput,
 }
 
 Object.entries(components).forEach(([name, component]) => {

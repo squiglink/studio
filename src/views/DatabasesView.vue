@@ -51,7 +51,7 @@ onMounted(() => {
     <template #content>
       <Loader v-if="loading" />
       <NetworkError v-else-if="fetchFailed"/>
-      <Table v-else :columns="tableColumns" :data="databases" />
+      <Table v-else v-model="databases" search-url="/databases" :columns="tableColumns" :data="databases" />
     </template>
   </MainLayout>
 </template>

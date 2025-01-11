@@ -51,7 +51,10 @@ onMounted(() => {
     <template #content>
       <Loader v-if="loading" />
       <NetworkError v-else-if="fetchFailed"/>
-      <Table v-else :columns="tableColumns" :data="brands" :selectable-rows="false">
+      <Table v-else :columns="tableColumns"
+                    v-model="brands"
+                    :selectable-rows="false"
+                    search-url="/brands">
         <template #actions>
           <!-- <fwb-button color="red" size="xs">
             Delete selected
