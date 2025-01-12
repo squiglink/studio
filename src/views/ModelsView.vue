@@ -8,6 +8,7 @@ import type { APIModel } from '@/utils/api/models'
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 import NetworkError from '@/components/NetworkError.vue'
+import SideModal from '@/components/SideModal.vue'
 
 const route = useRoute()
 

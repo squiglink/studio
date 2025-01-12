@@ -8,6 +8,8 @@ import type { APIBrand, APIBrands } from '@/utils/api/brands'
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 import NetworkError from '@/components/NetworkError.vue'
+import SideModal from '@/components/SideModal.vue'
+import Form from '@/components/Form.vue'
 
 const route = useRoute()
 
@@ -65,12 +67,6 @@ onMounted(() => {
         :page-count="pageCount"
       >
         <template #actions>
-          <!-- <fwb-button color="red" size="xs">
-            Delete selected
-            <template #suffix>
-              <Icon icon="flowbite:minus-outline" width="24" height="24" />
-            </template>
-          </fwb-button> -->
           <fwb-button color="default" size="md">
             Add new brand
             <template #suffix>
@@ -79,6 +75,26 @@ onMounted(() => {
           </fwb-button>
         </template>
       </Table>
+
+      <SideModal>
+        <template #header-text>Add new brand</template>
+
+        <template #content>
+          <Form>
+            <template #content>
+              <fwb-input label="Test" placeholder="kek" size="md" />
+              <fwb-input label="Test" placeholder="kek" size="md" />
+              <fwb-input label="Test" placeholder="kek" size="md" />
+              <fwb-input label="Test" placeholder="kek" size="md" />
+            </template>
+
+            <template #footer>
+              <fwb-button color="alternative" size="md">Cancel</fwb-button>
+              <fwb-button color="default" size="md">Save</fwb-button>
+            </template>
+          </Form>
+        </template>
+      </SideModal>
     </template>
   </MainLayout>
 </template>
