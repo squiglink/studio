@@ -26,6 +26,11 @@ const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
 const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ''))
 const loading = ref(false)
 const fetchFailed = ref(false)
+const createModalShown = ref(false)
+const newBrand = ref<Brand>({
+  name: '',
+  errors: [],
+})
 
 const fetchBrands = async () => {
   loading.value = true
@@ -39,6 +44,14 @@ const fetchBrands = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const openCreateModal = () => {
+  createModalShown.value = true
+}
+
+const closeCreateModal = () => {
+  createModalShown.value = false
 }
 
 watch([page, searchQuery], () => {
@@ -67,7 +80,7 @@ onMounted(() => {
         :page-count="pageCount"
       >
         <template #actions>
-          <fwb-button color="default" size="md">
+          <fwb-button color="default" size="md" @click="openCreateModal">
             Add new brand
             <template #suffix>
               <Icon icon="flowbite:plus-outline" width="16" height="16" />
@@ -76,20 +89,19 @@ onMounted(() => {
         </template>
       </Table>
 
-      <SideModal>
+      <SideModal v-model="createModalShown">
         <template #header-text>Add new brand</template>
 
         <template #content>
-          <Form>
+          <Form v-model="newBrand.errors">
             <template #content>
-              <fwb-input label="Test" placeholder="kek" size="md" />
-              <fwb-input label="Test" placeholder="kek" size="md" />
-              <fwb-input label="Test" placeholder="kek" size="md" />
-              <fwb-input label="Test" placeholder="kek" size="md" />
+              <fwb-input label="Name" placeholder="(required)" size="md" v-model="newBrand.name" />
             </template>
 
             <template #footer>
-              <fwb-button color="alternative" size="md">Cancel</fwb-button>
+              <fwb-button color="alternative" size="md" @click="closeCreateModal"
+                >Cancel</fwb-button
+              >
               <fwb-button color="default" size="md">Save</fwb-button>
             </template>
           </Form>

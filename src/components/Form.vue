@@ -11,7 +11,7 @@ const errors = defineModel<string[]>()
       </ul>
     </fwb-alert>
 
-    <div class="flex flex-col gap-3 basis-full">
+    <div class="flex flex-col gap-3 basis-full overflow-y-auto">
       <slot name="content" />
     </div>
 

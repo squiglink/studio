@@ -25,9 +25,11 @@ onMounted(() => {
 <template>
   <div v-if="modalShown"
        id="modal-container"
-       class="bg-gray-600 bg-opacity-80 absolute top-0 left-0 w-full h-full z-50"
+       class="lg:bg-gray-600 lg:bg-opacity-80 absolute top-0 left-0 w-full h-full z-50"
   >
-    <div class="w-[596px] bg-gray-900 h-full p-4 flex flex-col gap-3" :class="{ 'animate-left-slide-in': modalShown }">
+    <div class="w-full lg:w-[596px] bg-gray-900 h-full p-4 flex flex-col gap-3"
+         :class="{ 'animate-left-slide-in': modalShown }"
+    >
       <div class="flex justify-between items-center">
         <h2 class="text-base text-gray-400 font-semibold uppercase"><slot name="header-text" /></h2>
 
@@ -36,7 +38,9 @@ onMounted(() => {
         </span>
       </div>
 
-      <slot name="content" />
+      <div class="overflow-y-auto basis-full">
+        <slot name="content" />
+      </div>
     </div>
   </div>
 </template>
