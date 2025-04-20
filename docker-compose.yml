@@ -5,6 +5,7 @@ services:
       - 5173:5173
     volumes:
       - .:/studio
+      - /studio/node_modules
     networks:
       - squiglink
     environment:
