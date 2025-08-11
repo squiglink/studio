@@ -58,6 +58,10 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config
     if (error.response.status === 401 && !originalRequest._retry) {
       const authorizationStore = useAuthorizationStore()
+      if (!authorizationStore.refreshToken) {
+        return Promise.reject(error)
+      }
+
       originalRequest._retry = true
 
       try {
@@ -69,7 +73,6 @@ apiClient.interceptors.response.use(
         )
         authorizationStore.setAccessToken(response.data.accessToken)
         authorizationStore.setRefreshToken(response.data.refreshToken)
-        originalRequest.headers['Authorization'] = `Bearer ${authorizationStore.accessToken}`
         return apiClient(originalRequest)
       } catch (refreshError) {
         console.error('Token refresh failed')
