@@ -14,7 +14,6 @@ const props = defineProps<{
 
 const tableRows = defineModel<object[]>()
 const currentPage = defineModel<number>('currentPage', { required: true })
-const searchQuery = defineModel<string>('searchQuery')
 const loading = defineModel<boolean>('loading', { required: true })
 const selectedRows = ref([])
 </script>

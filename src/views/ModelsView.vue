@@ -2,7 +2,6 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { modelsApi } from '@/utils/api/models'
-import { brandsApi } from '@/utils/api/brands'
 
 import type { APIModel } from '@/utils/api/models'
 
@@ -119,19 +118,19 @@ onMounted(() => {
                 label="Review URL"
                 placeholder="(optional)"
                 size="md"
-                v-model="newModel.evaluation.reviewUrl"
+                v-model="newModel.evaluation!.reviewUrl"
               />
               <fwb-input
                 label="Review score"
                 placeholder="(optional)"
                 size="md"
-                v-model="newModel.evaluation.reviewScore"
+                v-model="newModel.evaluation!.reviewScore"
               />
               <fwb-input
                 label="Shop URL"
                 placeholder="(optional)"
                 size="md"
-                v-model="newModel.evaluation.shopUrl"
+                v-model="newModel.evaluation!.shopUrl"
               />
             </template>
 
