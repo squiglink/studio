@@ -20,7 +20,7 @@
     "@fontsource/inter": "^5.1.0",
     "axios": "^1.7.9",
     "flowbite": "^2.5.2",
-    "flowbite-vue": "^0.1.6",
+    "flowbite-vue": "^0.1.9",
     "pinia": "^2.2.6",
     "ts-case-convert": "^2.1.0",
     "vue": "^3.5.12",
