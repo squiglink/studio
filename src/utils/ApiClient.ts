@@ -1,5 +1,9 @@
 import axios from 'axios'
-import { toast } from 'vue3-toastify'
+// import { toast } from 'vue3-toastify'
+import { useAuthorizationStore } from '@/stores/authorization'
+
+import { authorizationApi } from './api/authorization'
+import router from '@/router'
 
 export type ClientError = {
   errors: string[]
@@ -19,16 +23,62 @@ export const apiClient = axios.create({
   timeout: 5000,
 })
 
+// apiClient.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     toast(`${error.name}: ${error.message} (${error.code})`, {
+//       theme: 'dark',
+//       type: 'error',
+//       position: 'bottom-right',
+//       dangerouslyHTMLString: true,
+//     })
+
+//     throw error
+//   },
+// )
+
+apiClient.interceptors.request.use(
+  (request) => {
+    const authorizationStore = useAuthorizationStore()
+
+    if (authorizationStore.accessToken) {
+      request.headers['Authorization'] = `Bearer ${authorizationStore.accessToken}`
+    }
+
+    return request
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
+)
+
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
-    toast(`${error.name}: ${error.message} (${error.code})`, {
-      theme: 'dark',
-      type: 'error',
-      position: 'bottom-right',
-      dangerouslyHTMLString: true,
-    })
+  async (error) => {
+    const originalRequest = error.config
+    if (error.response.status === 401 && !originalRequest._retry) {
+      const authorizationStore = useAuthorizationStore()
+      originalRequest._retry = true
 
-    throw error
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_BASE_API_URL}/authorization/refresh`,
+          {
+            refreshToken: authorizationStore.refreshToken,
+          },
+        )
+        authorizationStore.setAccessToken(response.data.accessToken)
+        authorizationStore.setRefreshToken(response.data.refreshToken)
+        originalRequest.headers['Authorization'] = `Bearer ${authorizationStore.accessToken}`
+        return apiClient(originalRequest)
+      } catch (refreshError) {
+        console.error('Token refresh failed')
+        authorizationStore.clearTokens()
+        router.push({ name: 'login' })
+        return Promise.reject(refreshError)
+      }
+    }
+
+    return Promise.reject(error)
   },
 )

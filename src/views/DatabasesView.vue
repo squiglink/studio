@@ -22,25 +22,22 @@ const pageCount = ref(1)
 const loading = ref(false)
 const fetchFailed = ref(false)
 
-const fetchBrands = async () => {
+const fetchDatabases = async () => {
   loading.value = true
-  const response = await databasesApi.all(page.value).catch(() => {
+  try {
+    const response = await databasesApi.all(page.value)
+    databases.value = response.page
+    pageCount.value = response.page_count
+  } catch (error) {
     fetchFailed.value = true
     loading.value = false
-
-    return <APIDatabases>{
-      page: [],
-      page_count: 0,
-    }
-  })
-
-  databases.value = response.page
-  pageCount.value = response.page_count
-  loading.value = false
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(() => {
-  fetchBrands()
+  fetchDatabases()
 })
 </script>
 
@@ -50,8 +47,14 @@ onMounted(() => {
 
     <template #content>
       <Loader v-if="loading" />
-      <NetworkError v-else-if="fetchFailed"/>
-      <Table v-else v-model="databases" search-url="/databases" :columns="tableColumns" :data="databases" />
+      <NetworkError v-else-if="fetchFailed" />
+      <Table
+        v-else
+        v-model="databases"
+        search-url="/databases"
+        :columns="tableColumns"
+        :data="databases"
+      />
     </template>
   </MainLayout>
 </template>

@@ -9,21 +9,22 @@ import router from './router'
 
 import { Icon } from '@iconify/vue'
 import {
+  FwbA,
+  FwbAlert,
+  FwbButton,
+  FwbCard,
+  FwbInput,
   FwbSidebar,
   FwbSidebarItem,
-  FwbSidebarLogo,
   FwbSidebarItemGroup,
-  FwbButton,
-  FwbA,
+  FwbSidebarLogo,
+  FwbSpinner,
   FwbTable,
   FwbTableBody,
   FwbTableCell,
   FwbTableHead,
   FwbTableHeadCell,
   FwbTableRow,
-  FwbSpinner,
-  FwbAlert,
-  FwbInput,
 } from 'flowbite-vue'
 
 import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
@@ -32,22 +33,23 @@ import 'vue3-toastify/dist/index.css'
 const app = createApp(App)
 
 const components = {
-  Icon,
-  FwbSidebar,
-  FwbSidebarItem,
-  FwbSidebarLogo,
-  FwbSidebarItemGroup,
-  FwbButton,
   FwbA,
   FwbAlert,
+  FwbButton,
+  FwbCard,
+  FwbInput,
+  FwbSidebar,
+  FwbSidebarItem,
+  FwbSidebarItemGroup,
+  FwbSidebarLogo,
+  FwbSpinner,
   FwbTable,
   FwbTableBody,
   FwbTableCell,
   FwbTableHead,
   FwbTableHeadCell,
   FwbTableRow,
-  FwbSpinner,
-  FwbInput,
+  Icon,
 }
 
 Object.entries(components).forEach(([name, component]) => {

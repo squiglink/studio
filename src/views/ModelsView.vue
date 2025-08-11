@@ -24,23 +24,19 @@ const fetchFailed = ref(false)
 
 const fetchModels = async () => {
   loading.value = true
-  const response = await modelsApi.all(page.value).catch(() => {
+  try {
+    const response = await modelsApi.all(page.value)
+    models.value = response.page
+    pageCount.value = response.page_count
+  } catch (error) {
     fetchFailed.value = true
     loading.value = false
-
-    return <APIModels>{
-      page: [],
-      page_count: 0,
-    }
-  })
-
-  models.value = response.page
-  pageCount.value = response.page_count
-  loading.value = false
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(() => {
-  console.log('fetching models')
   fetchModels()
 })
 </script>
@@ -51,8 +47,14 @@ onMounted(() => {
 
     <template #content>
       <Loader v-if="loading" />
-      <NetworkError v-else-if="fetchFailed"/>
-      <Table v-else v-model="models" search-url="/models" :columns="tableColumns" :selectable-rows="false">
+      <NetworkError v-else-if="fetchFailed" />
+      <Table
+        v-else
+        v-model="models"
+        search-url="/models"
+        :columns="tableColumns"
+        :selectable-rows="false"
+      >
         <template #actions>
           <!-- <fwb-button color="red" size="xs">
             Delete selected
