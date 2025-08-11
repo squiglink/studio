@@ -14,8 +14,8 @@ const route = useRoute()
 const tableColumns = [
   { name: 'Kind', key: 'kind', path: '/databases/' },
   { name: 'Path', key: 'path' },
-  { name: 'Created', key: 'createdAt' },
-  { name: 'Last modified', key: 'updatedAt' },
+  { name: 'Created', key: 'created_at' },
+  { name: 'Last modified', key: 'updated_at' },
 ]
 
 const databases = ref([] as APIDatabase[])

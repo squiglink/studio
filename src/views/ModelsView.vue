@@ -14,8 +14,8 @@ const route = useRoute()
 const tableColumns = [
   { name: 'Name', key: 'name', path: '/models/' },
   { name: 'Brand', nestedKey: ['brand', 'name'] },
-  { name: 'Created', key: 'createdAt' },
-  { name: 'Last modified', key: 'updatedAt' },
+  { name: 'Created', key: 'created_at' },
+  { name: 'Last modified', key: 'updated_at' },
 ]
 
 const models = ref([] as APIModel[])

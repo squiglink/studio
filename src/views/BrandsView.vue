@@ -14,8 +14,8 @@ const route = useRoute()
 const tableColumns = [
   { name: 'Brand', key: 'name', path: '/brands/' },
   { name: 'Models', key: 'model_count' },
-  { name: 'Created', key: 'createdAt' },
-  { name: 'Last modified', key: 'updatedAt' },
+  { name: 'Created', key: 'created_at' },
+  { name: 'Last modified', key: 'updated_at' },
 ]
 
 const brands = ref([] as APIBrand[])
