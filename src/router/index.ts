@@ -24,6 +24,16 @@ const router = createRouter({
       component: () => import('../views/ModelsView.vue'),
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
+    },
+    {
+      path: '/auth/verify',
+      name: 'authVerify',
+      component: () => import('../views/AuthVerifyView.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       component: () => import('../views/PageNotFoundView.vue'),
     },
