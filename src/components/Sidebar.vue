@@ -1,5 +1,21 @@
+<script setup lang="ts">
+import { useAuthorizationStore } from '../stores/authorization'
+import { useRouter } from 'vue-router'
+
+const authorizationStore = useAuthorizationStore()
+const router = useRouter()
+
+const logout = () => {
+  authorizationStore.clearTokens()
+  router.push('/login')
+}
+</script>
+
 <template>
-  <fwb-sidebar id="main-sidebar" class="w-72 fixed top-0 left-0 z-40 border-solid border-r border-gray-700 transition-transform -translate-x-full sm:translate-x-0">
+  <fwb-sidebar
+    id="main-sidebar"
+    class="w-72 fixed top-0 left-0 z-40 border-solid border-r border-gray-700 transition-transform -translate-x-full sm:translate-x-0"
+  >
     <fwb-sidebar-logo name="Squiglink Studio" logo="/src/assets/logo.svg" tag="router-link" />
 
     <fwb-sidebar-item
@@ -56,7 +72,7 @@
         <template #default>Documentation</template>
       </fwb-sidebar-item>
 
-      <fwb-sidebar-item class="py-1">
+      <fwb-sidebar-item class="py-1" @click="logout">
         <template #icon>
           <Icon
             icon="flowbite:arrow-left-to-bracket-outline"
