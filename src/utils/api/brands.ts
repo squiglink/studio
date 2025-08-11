@@ -2,9 +2,9 @@ import { apiClient } from '../ApiClient'
 import type { APIPage } from '../ApiClient'
 
 export type APIBrand = {
-  id: number
+  id?: number
   name: string
-  model_count: number
+  model_count?: number
 }
 
 export type APIBrands = APIPage<APIBrand>
@@ -15,6 +15,8 @@ export const brandsApi = {
     return response.data as APIBrands
   },
 
-  // create
-  // edit
+  async create(brand: APIBrand) {
+    const response = await apiClient.post('/brands/new', brand)
+    return response.data as APIBrand
+  },
 }
