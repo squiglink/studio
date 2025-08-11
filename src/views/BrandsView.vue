@@ -3,7 +3,7 @@ import { brandsApi } from '@/utils/api/brands'
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { APIBrand, APIBrands } from '@/utils/api/brands'
+import type { APIBrand } from '@/utils/api/brands'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
@@ -20,6 +20,11 @@ const tableColumns = [
   { name: 'Last modified', key: 'updated_at' },
 ]
 
+const initialBrandFormState: Brand = {
+  name: '',
+  errors: [],
+}
+
 const brands = ref([] as APIBrand[])
 const pageCount = ref(1)
 const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
@@ -27,10 +32,7 @@ const searchQuery = computed(() => (route.query.query ? String(route.query.query
 const loading = ref(false)
 const fetchFailed = ref(false)
 const createModalShown = ref(false)
-const newBrand = ref<Brand>({
-  name: '',
-  errors: [],
-})
+const newBrandForm = ref<Brand>(initialBrandFormState)
 
 const fetchBrands = async () => {
   loading.value = true
@@ -42,6 +44,25 @@ const fetchBrands = async () => {
     fetchFailed.value = true
     loading.value = false
   } finally {
+    loading.value = false
+  }
+}
+
+const convertToAPIBrand = (form: Brand): APIBrand => ({
+  name: form.name,
+})
+
+const createBrand = async () => {
+  loading.value = true
+  try {
+    const apiBrand: APIBrand = convertToAPIBrand(newBrandForm.value)
+    await brandsApi.create(apiBrand)
+
+    newBrandForm.value = initialBrandFormState
+    createModalShown.value = false
+    fetchBrands()
+  } catch (error) {
+    console.error(error)
     loading.value = false
   }
 }
@@ -93,16 +114,23 @@ onMounted(() => {
         <template #header-text>Add new brand</template>
 
         <template #content>
-          <Form v-model="newBrand.errors">
+          <Form v-model="newBrandForm.errors">
             <template #content>
-              <fwb-input label="Name" placeholder="(required)" size="md" v-model="newBrand.name" />
+              <fwb-input
+                label="Name"
+                label-class="text-white"
+                placeholder="(required)"
+                size="md"
+                v-model="newBrandForm.name"
+                required
+              />
             </template>
 
             <template #footer>
-              <fwb-button color="alternative" size="md" @click="closeCreateModal"
-                >Cancel</fwb-button
-              >
-              <fwb-button color="default" size="md">Save</fwb-button>
+              <fwb-button color="alternative" size="md" @click="closeCreateModal">
+                Cancel
+              </fwb-button>
+              <fwb-button color="default" size="md" @click="createBrand">Save</fwb-button>
             </template>
           </Form>
         </template>
