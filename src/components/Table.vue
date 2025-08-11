@@ -2,14 +2,17 @@
 import { ref } from 'vue'
 import TableActions from './table/Actions.vue'
 import TableSearch from './table/Search.vue'
+import TablePagination from './table/Pagination.vue'
 
 const props = defineProps<{
   columns: TableColumn[]
   selectableRows?: boolean
   searchUrl?: string
+  pageCount: number
 }>()
 
 const tableRows = defineModel<object[]>()
+const currentPage = defineModel<number>('currentPage', { required: true })
 const selectedRows = ref([])
 </script>
 
@@ -40,9 +43,7 @@ const selectedRows = ref([])
             <input
               v-model="selectedRows"
               type="checkbox"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded \
-                     focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 \
-                     dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded \ focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 \ dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
               :value="item['id' as keyof typeof item]"
               :id="`checkbox-table-${index}`"
             />
@@ -54,13 +55,27 @@ const selectedRows = ref([])
             :key="column.name"
             :class="columnIndex === 0 ? 'w-1/2' : ''"
           >
-            <fwb-a v-if="columnIndex === 0" :href="`${column.path}${item['id' as keyof typeof item]}`">
+            <fwb-a
+              v-if="columnIndex === 0"
+              :href="`${column.path}${item['id' as keyof typeof item]}`"
+            >
               {{ item[column.key as keyof typeof item] }}
             </fwb-a>
+            <div v-else-if="column.key === 'created_at' || column.key === 'updated_at'">
+              {{
+                new Date(item[column.key as keyof typeof item])
+                  .toISOString()
+                  .replace('T', ' ')
+                  .substring(0, 16)
+              }}
+            </div>
             <div v-else>
               {{
                 column.nestedKey
-                  ? column.nestedKey.reduce((resultObj, key) => resultObj[key as keyof typeof resultObj], item)
+                  ? column.nestedKey.reduce(
+                      (resultObj, key) => resultObj[key as keyof typeof resultObj],
+                      item,
+                    )
                   : item[column.key as keyof typeof item]
               }}
             </div>
@@ -68,5 +83,9 @@ const selectedRows = ref([])
         </fwb-table-row>
       </fwb-table-body>
     </fwb-table>
+
+    <div class="flex justify-end p-4" v-if="pageCount > 1">
+      <TablePagination v-model="currentPage" :page-count="pageCount" />
+    </div>
   </div>
 </template>

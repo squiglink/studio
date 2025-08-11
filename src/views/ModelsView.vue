@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { modelsApi } from '@/utils/api/models'
 
-import type { APIModel, APIModels } from '@/utils/api/models'
+import type { APIModel } from '@/utils/api/models'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 import Loader from '@/components/Loader.vue'
 import NetworkError from '@/components/NetworkError.vue'
+
+const route = useRoute()
 
 const tableColumns = [
   { name: 'Name', key: 'name', path: '/models/' },
@@ -17,7 +20,7 @@ const tableColumns = [
 ]
 
 const models = ref([] as APIModel[])
-const page = ref(1)
+const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
 const pageCount = ref(1)
 const loading = ref(false)
 const fetchFailed = ref(false)
@@ -36,6 +39,10 @@ const fetchModels = async () => {
   }
 }
 
+watch([page], () => {
+  fetchModels()
+})
+
 onMounted(() => {
   fetchModels()
 })
@@ -51,9 +58,11 @@ onMounted(() => {
       <Table
         v-else
         v-model="models"
+        v-model:current-page="page"
         search-url="/models"
         :columns="tableColumns"
         :selectable-rows="false"
+        :page-count="pageCount"
       >
         <template #actions>
           <!-- <fwb-button color="red" size="xs">
