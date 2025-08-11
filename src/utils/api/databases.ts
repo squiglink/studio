@@ -10,8 +10,8 @@ export type APIDatabase = {
 export type APIDatabases = APIPage<APIDatabase>
 
 export const databasesApi = {
-  async all(page: number) {
-    const response = await apiClient.get('/databases', { params: { page: page } })
+  async all(page: number, query: string) {
+    const response = await apiClient.get('/databases', { params: { page: page, query: query } })
     return response.data as APIDatabases
   },
 }

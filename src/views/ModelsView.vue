@@ -7,7 +7,6 @@ import type { APIModel } from '@/utils/api/models'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
-import Loader from '@/components/Loader.vue'
 import NetworkError from '@/components/NetworkError.vue'
 
 const route = useRoute()
@@ -21,6 +20,7 @@ const tableColumns = [
 
 const models = ref([] as APIModel[])
 const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
+const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ''))
 const pageCount = ref(1)
 const loading = ref(false)
 const fetchFailed = ref(false)
@@ -28,7 +28,7 @@ const fetchFailed = ref(false)
 const fetchModels = async () => {
   loading.value = true
   try {
-    const response = await modelsApi.all(page.value)
+    const response = await modelsApi.all(page.value, searchQuery.value)
     models.value = response.page
     pageCount.value = response.page_count
   } catch (error) {
@@ -39,7 +39,7 @@ const fetchModels = async () => {
   }
 }
 
-watch([page], () => {
+watch([page, searchQuery], () => {
   fetchModels()
 })
 
@@ -53,13 +53,13 @@ onMounted(() => {
     <template #header-text v-if="!fetchFailed">Models</template>
 
     <template #content>
-      <Loader v-if="loading" />
-      <NetworkError v-else-if="fetchFailed" />
+      <NetworkError v-if="fetchFailed" />
       <Table
         v-else
         v-model="models"
         v-model:current-page="page"
-        search-url="/models"
+        v-model:loading="loading"
+        :enable-search="true"
         :columns="tableColumns"
         :selectable-rows="false"
         :page-count="pageCount"

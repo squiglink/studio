@@ -10,8 +10,8 @@ export type APIBrand = {
 export type APIBrands = APIPage<APIBrand>
 
 export const brandsApi = {
-  async all(page: number) {
-    const response = await apiClient.get('/brands', { params: { page: page } })
+  async all(page: number, query: string) {
+    const response = await apiClient.get('/brands', { params: { page: page, query: query } })
     return response.data as APIBrands
   },
 

@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { brandsApi } from '@/utils/api/brands'
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { APIBrand, APIBrands } from '@/utils/api/brands'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
-import Loader from '@/components/Loader.vue'
 import NetworkError from '@/components/NetworkError.vue'
 
 const route = useRoute()
@@ -20,15 +19,16 @@ const tableColumns = [
 ]
 
 const brands = ref([] as APIBrand[])
-const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
 const pageCount = ref(1)
+const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
+const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ''))
 const loading = ref(false)
 const fetchFailed = ref(false)
 
 const fetchBrands = async () => {
   loading.value = true
   try {
-    const response = await brandsApi.all(page.value)
+    const response = await brandsApi.all(page.value, searchQuery.value)
     brands.value = response.page
     pageCount.value = response.page_count
   } catch (error) {
@@ -39,7 +39,7 @@ const fetchBrands = async () => {
   }
 }
 
-watch([page], () => {
+watch([page, searchQuery], () => {
   fetchBrands()
 })
 
@@ -53,15 +53,15 @@ onMounted(() => {
     <template #header-text v-if="!fetchFailed">Brands</template>
 
     <template #content>
-      <Loader v-if="loading" />
-      <NetworkError v-else-if="fetchFailed" />
+      <NetworkError v-if="fetchFailed" />
       <Table
         v-else
         v-model="brands"
         v-model:current-page="page"
+        v-model:loading="loading"
+        :enable-search="true"
         :columns="tableColumns"
         :selectable-rows="false"
-        search-url="/brands"
         :page-count="pageCount"
       >
         <template #actions>

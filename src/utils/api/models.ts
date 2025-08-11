@@ -12,8 +12,10 @@ export type APIModel = {
 export type APIModels = APIPage<APIModel>
 
 export const modelsApi = {
-  async all(page: number) {
-    const response = await apiClient.get('/models', { params: { page: page } })
+  async all(page: number, query: string) {
+    const response = await apiClient.get('/models', {
+      params: { page: page, query: query },
+    })
     return response.data as APIModels
   },
 }
