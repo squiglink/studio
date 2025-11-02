@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAuthorizationStore } from '../stores/authorization'
 import { useRouter } from 'vue-router'
+import logo from '@/assets/logo.svg'
 
 const authorizationStore = useAuthorizationStore()
 const router = useRouter()
@@ -16,7 +17,7 @@ const logout = () => {
     id="main-sidebar"
     class="w-72 fixed top-0 left-0 z-40 border-solid border-r border-gray-700 transition-transform -translate-x-full sm:translate-x-0"
   >
-    <fwb-sidebar-logo name="Squiglink Studio" logo="/src/assets/logo.svg" tag="router-link" />
+    <fwb-sidebar-logo name="Squiglink Studio" :logo="logo" tag="router-link" />
 
     <fwb-sidebar-item
       to="/databases"

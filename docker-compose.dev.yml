@@ -1,0 +1,11 @@
+services:
+  studio:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - 5173:5173
+    command: pnpm dev
+    volumes:
+      - .:/studio
+      - /studio/node_modules

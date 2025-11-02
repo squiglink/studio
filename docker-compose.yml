@@ -1,15 +1,11 @@
 services:
   studio:
     build: .
+    env_file: .env
     ports:
-      - 5173:5173
-    volumes:
-      - .:/studio
-      - /studio/node_modules
+      - 8080:8080
     networks:
       - squiglink
-    environment:
-      - VITE_BASE_API_URL=http://localhost:3000
 
 networks:
   squiglink:

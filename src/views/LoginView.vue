@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { authorizationApi } from '@/utils/api/authorization'
@@ -11,6 +11,7 @@ import Loader from '@/components/Loader.vue'
 const authorizationStore = useAuthorizationStore()
 const router = useRouter()
 
+const turnstileEnabled = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_ENABLED === 'true'
 const loginState = ref<'idle' | 'loading' | 'success' | 'error'>('idle')
 
 onBeforeMount(() => {
@@ -20,16 +21,28 @@ onBeforeMount(() => {
 })
 
 const email = ref('')
+const turnstileToken = ref('')
 
 const login = async () => {
   loginState.value = 'loading'
-  const result = await authorizationApi.login(email.value)
+  const result = await authorizationApi.login(email.value, turnstileToken.value)
   if (result) {
     loginState.value = 'success'
   } else {
     loginState.value = 'error'
   }
 }
+
+onMounted(() => {
+  if (turnstileEnabled) {
+    window.turnstile.render('#turnstile-container', {
+      sitekey: import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY,
+      callback: function (token: string) {
+        turnstileToken.value = token
+      },
+    })
+  }
+})
 </script>
 
 <template>
@@ -44,6 +57,9 @@ const login = async () => {
           <div class="flex flex-col gap-2 w-full">
             <label for="email">Email address</label>
             <fwb-input id="email" type="email" v-model="email" />
+          </div>
+          <div class="w-full flex items-center justify-center" v-if="turnstileEnabled">
+            <div id="turnstile-container"></div>
           </div>
           <fwb-button color="default" size="lg" class="justify-center" @click="login">
             Email me a magic link

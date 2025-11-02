@@ -6,9 +6,12 @@ interface AuthResponse {
 }
 
 export const authorizationApi = {
-  async login(email: string): Promise<boolean> {
+  async login(email: string, cloudflareTurnstileToken: string): Promise<boolean> {
     try {
-      const response = await apiClient.post('/authorization/login', { email })
+      const response = await apiClient.post('/authorization/login', {
+        email,
+        cloudflareTurnstileToken,
+      })
 
       if (response.status !== 200) {
         throw new Error('Failed to send magic link')
