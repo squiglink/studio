@@ -30,7 +30,14 @@ const selectedRows = ref([])
       </template>
     </TableActions>
 
-    <Loader v-if="loading" />
+    <div class="p-4 bg-gray-800 rounded-b-lg" v-if="loading">
+      <Loader>
+        <template #text>
+          <slot name="text">Fetching data...</slot>
+        </template>
+      </Loader>
+    </div>
+
     <div v-else>
       <fwb-table hoverable class="rounded-lg !rounded-t-none">
         <fwb-table-head>

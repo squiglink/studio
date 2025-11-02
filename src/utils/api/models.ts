@@ -3,7 +3,7 @@ import type { APIPage } from '../ApiClient'
 import type { APIBrand } from './brands'
 
 export type APIModel = {
-  id: number
+  id: string
   name: string
   shop_url: string
   brand: APIBrand

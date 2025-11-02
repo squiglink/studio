@@ -1,6 +1,6 @@
 interface Model {
   name: string
-  brandId: number
+  brandId: string
   evaluation?: Evaluation
   errors: string[]
 }

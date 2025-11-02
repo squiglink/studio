@@ -6,32 +6,42 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/DatabasesView.vue'),
+      component: () => import('../views/databases/DatabasesView.vue'),
     },
     {
       path: '/databases',
       name: 'databases',
-      component: () => import('../views/DatabasesView.vue'),
+      component: () => import('../views/databases/DatabasesView.vue'),
     },
     {
       path: '/brands',
       name: 'brands',
-      component: () => import('../views/BrandsView.vue'),
+      component: () => import('../views/brands/BrandsView.vue'),
+    },
+    {
+      path: '/brands/new',
+      name: 'newBrand',
+      component: () => import('../views/brands/NewBrandView.vue'),
     },
     {
       path: '/models',
       name: 'models',
-      component: () => import('../views/ModelsView.vue'),
+      component: () => import('../views/models/ModelsView.vue'),
+    },
+    {
+      path: '/models/new',
+      name: 'newModel',
+      component: () => import('../views/models/NewModelView.vue'),
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginView.vue'),
+      component: () => import('../views/auth/LoginView.vue'),
     },
     {
       path: '/auth/verify',
       name: 'authVerify',
-      component: () => import('../views/AuthVerifyView.vue'),
+      component: () => import('../views/auth/AuthVerifyView.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

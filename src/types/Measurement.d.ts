@@ -1,6 +1,8 @@
 interface Measurement {
   label: string
   type: string
-  file: string
+  databaseId: string
+  leftChannel: File[]
+  rightChannel: File[]
   errors: string[]
 }

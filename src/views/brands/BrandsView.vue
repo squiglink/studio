@@ -8,8 +8,6 @@ import type { APIBrand } from '@/utils/api/brands'
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
 import NetworkError from '@/components/NetworkError.vue'
-import SideModal from '@/components/SideModal.vue'
-import Form from '@/components/Form.vue'
 
 const route = useRoute()
 
@@ -20,19 +18,12 @@ const tableColumns = [
   { name: 'Last modified', key: 'updated_at' },
 ]
 
-const initialBrandFormState: Brand = {
-  name: '',
-  errors: [],
-}
-
 const brands = ref([] as APIBrand[])
 const pageCount = ref(1)
 const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
 const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ''))
 const loading = ref(false)
 const fetchFailed = ref(false)
-const createModalShown = ref(false)
-const newBrandForm = ref<Brand>(initialBrandFormState)
 
 const fetchBrands = async () => {
   loading.value = true
@@ -46,33 +37,6 @@ const fetchBrands = async () => {
   } finally {
     loading.value = false
   }
-}
-
-const convertToAPIBrand = (form: Brand): APIBrand => ({
-  name: form.name,
-})
-
-const createBrand = async () => {
-  loading.value = true
-  try {
-    const apiBrand: APIBrand = convertToAPIBrand(newBrandForm.value)
-    await brandsApi.create(apiBrand)
-
-    newBrandForm.value = initialBrandFormState
-    createModalShown.value = false
-    fetchBrands()
-  } catch (error) {
-    console.error(error)
-    loading.value = false
-  }
-}
-
-const openCreateModal = () => {
-  createModalShown.value = true
-}
-
-const closeCreateModal = () => {
-  createModalShown.value = false
 }
 
 watch([page, searchQuery], () => {
@@ -101,7 +65,7 @@ onMounted(() => {
         :page-count="pageCount"
       >
         <template #actions>
-          <fwb-button color="default" size="md" @click="openCreateModal">
+          <fwb-button color="default" size="md" tag="router-link" :href="{ name: 'newBrand' }">
             Add new brand
             <template #suffix>
               <Icon icon="flowbite:plus-outline" width="16" height="16" />
@@ -109,32 +73,6 @@ onMounted(() => {
           </fwb-button>
         </template>
       </Table>
-
-      <SideModal v-model="createModalShown">
-        <template #header-text>Add new brand</template>
-
-        <template #content>
-          <Form v-model="newBrandForm.errors">
-            <template #content>
-              <fwb-input
-                label="Name"
-                label-class="text-white"
-                placeholder="(required)"
-                size="md"
-                v-model="newBrandForm.name"
-                required
-              />
-            </template>
-
-            <template #footer>
-              <fwb-button color="alternative" size="md" @click="closeCreateModal">
-                Cancel
-              </fwb-button>
-              <fwb-button color="default" size="md" @click="createBrand">Save</fwb-button>
-            </template>
-          </Form>
-        </template>
-      </SideModal>
     </template>
   </MainLayout>
 </template>
