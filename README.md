@@ -4,7 +4,25 @@
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-## Project Setup
+# Project Setup
+
+## Docker compose
+
+### Development build. Will be served on port 5173
+
+```sh
+cp .env.example .env && \
+docker compose -f docker-compose.yml -f docker-compose.dev.yml build && \
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+```
+
+### Production build. Will be served on port 8080
+
+```sh
+cp env.example .env && docker compose build && docker compose up -d
+```
+
+## Locally
 
 ```sh
 pnpm install
