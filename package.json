@@ -50,7 +50,7 @@
     "oxlint": "^1.11.1",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.11",
-    "typescript": "~5.9.2",
+    "typescript": "~5.9.3",
     "vite": "^7.1.1",
     "vite-plugin-vue-devtools": "^8.0.0",
     "vitest": "^3.2.4",
@@ -70,6 +70,10 @@
       "vite@>=5.0.0 <5.4.16": ">=5.4.16",
       "vite@>=5.0.0 <5.4.17": ">=5.4.17",
       "vite@>=5.0.0 <5.4.18": ">=5.4.18"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@tailwindcss/oxide",
+      "esbuild"
+    ]
   }
 }
