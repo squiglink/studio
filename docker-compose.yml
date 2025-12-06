@@ -1,7 +1,13 @@
 services:
   studio:
-    build: .
     env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_BASE_API_URL: ${VITE_BASE_API_URL}
+        VITE_CLOUDFLARE_TURNSTILE_ENABLED: ${VITE_CLOUDFLARE_TURNSTILE_ENABLED}
+        VITE_CLOUDFLARE_TURNSTILE_SITE_KEY: ${VITE_CLOUDFLARE_TURNSTILE_SITE_KEY}
     ports:
       - 8080:8080
     networks:
