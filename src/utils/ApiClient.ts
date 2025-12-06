@@ -2,7 +2,6 @@ import axios from 'axios'
 // import { toast } from 'vue3-toastify'
 import { useAuthorizationStore } from '@/stores/authorization'
 
-import { authorizationApi } from './api/authorization'
 import router from '@/router'
 
 export type ClientError = {
@@ -39,17 +38,25 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (request) => {
+    const publicEndpoints = ['/authorization/login', '/authorization/verify']
+    const isPublicEndpoint = publicEndpoints.some((ep) => request.url?.includes(ep))
+
+    if (isPublicEndpoint) {
+      return request
+    }
+
     const authorizationStore = useAuthorizationStore()
 
     if (authorizationStore.accessToken) {
       request.headers['Authorization'] = `Bearer ${authorizationStore.accessToken}`
+    } else {
+      router.push({ name: 'login' })
+      return Promise.reject(new Error('Unauthorized'))
     }
 
     return request
   },
-  (error) => {
-    return Promise.reject(error)
-  },
+  (error) => Promise.reject(error),
 )
 
 apiClient.interceptors.response.use(
