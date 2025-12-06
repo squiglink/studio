@@ -13,6 +13,10 @@ jobs:
       contents: read
       packages: write
     runs-on: ubuntu-latest
+    env:
+      VITE_BASE_API_URL: ${{ vars.VITE_BASE_API_URL }}
+      VITE_CLOUDFLARE_TURNSTILE_ENABLED: ${{ vars.VITE_CLOUDFLARE_TURNSTILE_ENABLED }}
+      VITE_CLOUDFLARE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY }}
     steps:
       - uses: actions/checkout@v5
       - uses: docker/setup-buildx-action@v3
