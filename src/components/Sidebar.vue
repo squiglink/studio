@@ -71,7 +71,7 @@ const logout = () => {
 
       <fwb-sidebar-item
         class="py-1"
-        link="https://squiglink.github.io/documentation/"
+        link="http://documentation.squig.link/"
         tag="a"
         target="_blank"
       >
