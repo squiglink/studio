@@ -16,7 +16,7 @@ export const brandsApi = {
   },
 
   async create(brand: APIBrand) {
-    const response = await apiClient.post('/brands/new', brand)
+    const response = await apiClient.post('/brands', brand)
     return response.data as APIBrand
   },
 
