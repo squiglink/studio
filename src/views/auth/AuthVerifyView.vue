@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { authorizationApi } from '@/utils/api/authorization'
@@ -14,7 +14,7 @@ const router = useRouter()
 
 onBeforeMount(async () => {
   if (authorizationStore.accessToken) {
-    router.push({ name: 'home' })
+    router.replace({ name: 'home' })
     return
   }
 
@@ -22,22 +22,22 @@ onBeforeMount(async () => {
   const token = route.query.token as string
 
   if (!token) {
-    router.push({ name: 'login' })
+    router.replace({ name: 'login' })
     return
   }
 
   const response = await authorizationApi.verify(token)
   if (!response) {
-    router.push({ name: 'login' })
+    router.replace({ name: 'login' })
     return
   }
 
   console.log(`response: ${JSON.stringify(response)}`)
 
-  authorizationStore.setAccessToken(response.accessToken)
-  authorizationStore.setRefreshToken(response.refreshToken)
+  authorizationStore.setAccessToken(response.access_token)
+  authorizationStore.setRefreshToken(response.refresh_token)
 
-  router.push({ name: 'home' })
+  router.replace({ name: 'home' })
 })
 </script>
 
