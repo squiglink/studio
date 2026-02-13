@@ -24,6 +24,11 @@ const router = createRouter({
       component: () => import('../views/brands/NewBrandView.vue'),
     },
     {
+      path: '/brands/:id/edit',
+      name: 'editBrand',
+      component: () => import('../views/brands/EditBrandView.vue'),
+    },
+    {
       path: '/models',
       name: 'models',
       component: () => import('../views/models/ModelsView.vue'),
@@ -32,6 +37,11 @@ const router = createRouter({
       path: '/models/new',
       name: 'newModel',
       component: () => import('../views/models/NewModelView.vue'),
+    },
+    {
+      path: '/models/:id/edit',
+      name: 'editModel',
+      component: () => import('../views/models/EditModelView.vue'),
     },
     {
       path: '/login',

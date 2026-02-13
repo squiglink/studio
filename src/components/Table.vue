@@ -68,7 +68,7 @@ const selectedRows = ref([])
             >
               <fwb-a
                 v-if="columnIndex === 0"
-                :href="`${column.path}${item['id' as keyof typeof item]}`"
+                :href="`${column.path}${item['id' as keyof typeof item]}${column.pathSuffix || ''}`"
               >
                 {{ item[column.key as keyof typeof item] }}
               </fwb-a>

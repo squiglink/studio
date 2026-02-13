@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { brandsApi } from '@/utils/api/brands'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { toast } from 'vue3-toastify'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 import type { APIBrand } from '@/utils/api/brands'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Form from '@/components/Form.vue'
+import NetworkError from '@/components/NetworkError.vue'
 
 const router = useRouter()
+const route = useRoute()
 
 const initialBrandFormState: Brand = {
   name: '',
@@ -17,19 +19,23 @@ const initialBrandFormState: Brand = {
 }
 
 const loading = ref(false)
-const newBrandForm = ref<Brand>(initialBrandFormState)
+const fetchFailed = ref(false)
+const editBrandForm = ref<Brand>(initialBrandFormState)
 
 const convertToAPIBrand = (form: Brand): APIBrand => ({
   name: form.name,
 })
 
-const createBrand = async () => {
+const updateBrand = async () => {
   loading.value = true
   try {
-    const apiBrand: APIBrand = convertToAPIBrand(newBrandForm.value)
-    await brandsApi.create(apiBrand)
+    const apiBrand: APIBrand = {
+      ...convertToAPIBrand(editBrandForm.value),
+      id: route.params.id as string,
+    }
+    await brandsApi.edit(apiBrand)
 
-    toast.success('Brand created successfully!')
+    toast.success('Brand updated successfully!')
 
     router.push({ name: 'brands' })
   } catch (error) {
@@ -37,12 +43,16 @@ const createBrand = async () => {
     loading.value = false
   }
 }
+
+onMounted(async () => {
+  // TODO: Get the brand based from the ID.
+})
 </script>
 
 <template>
   <MainLayout>
-    <template #header-text>Add new brand</template>
-    <template #header-buttons>
+    <template #header-text v-if="!fetchFailed">Edit brand</template>
+    <template #header-buttons v-if="!fetchFailed">
       <fwb-button
         color="alternative"
         size="md"
@@ -52,17 +62,18 @@ const createBrand = async () => {
       >
         Cancel
       </fwb-button>
-      <fwb-button color="default" size="md" @click="createBrand">Save</fwb-button>
+      <fwb-button color="default" size="md" @click="updateBrand">Save</fwb-button>
     </template>
 
     <template #content>
-      <Form v-model="newBrandForm.errors" class="w-1/4">
+      <NetworkError v-if="fetchFailed" />
+      <Form v-else v-model="editBrandForm.errors" class="w-1/4">
         <template #content>
           <fwb-input
             label="Name"
             placeholder="(required)"
             size="md"
-            v-model="newBrandForm.name"
+            v-model="editBrandForm.name"
             required
           />
         </template>

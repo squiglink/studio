@@ -12,7 +12,7 @@ import NetworkError from '@/components/NetworkError.vue'
 const route = useRoute()
 
 const tableColumns = [
-  { name: 'Brand', key: 'name', path: '/brands/' },
+  { name: 'Brand', key: 'name', path: '/brands/', pathSuffix: '/edit' },
   { name: 'Models', key: 'model_count' },
   { name: 'Created', key: 'created_at' },
   { name: 'Last modified', key: 'updated_at' },
