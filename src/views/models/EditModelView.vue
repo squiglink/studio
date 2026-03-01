@@ -11,14 +11,19 @@ import Dropzone from '@/components/Dropzone.vue'
 import { databasesApi } from '@/utils/api/databases'
 import { brandsApi } from '@/utils/api/brands'
 import { modelsApi } from '@/utils/api/models'
-import type { APIModel } from '@/utils/api/models'
+import { measurementsApi } from '@/utils/api/measurements'
+import type { APIMeasurement } from '@/utils/api/measurements'
+import { evaluationsApi } from '@/utils/api/evaluations'
+import type { APIEvaluation } from '@/utils/api/evaluations'
 import NetworkError from '@/components/NetworkError.vue'
 
 const route = useRoute()
 const router = useRouter()
+const modelId = route.params.id as string
 
 const addMeasurementModalShown = ref(false)
 const loading = ref(false)
+const saving = ref(false)
 const fetchFailed = ref(false)
 
 const openAddMeasurementModal = () => {
@@ -51,9 +56,16 @@ const initialEvaluationFormState: Evaluation = {
   errors: [],
 }
 
-const editModelForm = ref<Model>(initialModelFormState)
-const newMeasurement = ref<Measurement>(initialMeasurementFormState)
-const newEvaluation = ref<Evaluation>(initialEvaluationFormState)
+const editModelForm = ref<Model>({ ...initialModelFormState })
+const newMeasurement = ref<Measurement>({
+  ...initialMeasurementFormState,
+  leftChannel: [],
+  rightChannel: [],
+})
+const newEvaluation = ref<Evaluation>({ ...initialEvaluationFormState })
+
+const measurements = ref<APIMeasurement[]>([])
+const existingEvaluation = ref<APIEvaluation | null>(null)
 
 const measurementTypes = [
   { name: 'Frequency response', value: 'frequency_response' },
@@ -62,83 +74,172 @@ const measurementTypes = [
   { name: 'Sound isolation', value: 'sound_isolation' },
 ]
 
+const measurementTypeLabel = (kind: string) => {
+  return measurementTypes.find((t) => t.value === kind)?.name ?? kind
+}
+
 const databases = ref([] as { name: string; value: string }[])
 const brands = ref([] as { name: string; value: string }[])
 
 const fetchBrands = async () => {
-  try {
-    loading.value = true
-    const response = await brandsApi.all(1, '')
-    brands.value.push(...response.page.map((brand) => ({ name: brand.name, value: brand.id })))
+  const response = await brandsApi.all(1, '')
+  brands.value.push(...response.page.map((brand) => ({ name: brand.name, value: brand.id })))
 
-    if (response.page_count > 1) {
-      for (let i = 2; i <= response.page_count; i++) {
-        const pageResponse = await brandsApi.all(i, '')
-        brands.value.push(
-          ...pageResponse.page.map((brand) => ({ name: brand.name, value: brand.id })),
-        )
-      }
+  if (response.page_count > 1) {
+    for (let i = 2; i <= response.page_count; i++) {
+      const pageResponse = await brandsApi.all(i, '')
+      brands.value.push(
+        ...pageResponse.page.map((brand) => ({ name: brand.name, value: brand.id })),
+      )
     }
-  } catch (error) {
-    console.error(error)
-    fetchFailed.value = true
-  } finally {
-    loading.value = false
   }
 }
 
 const fetchDatabases = async () => {
-  try {
-    loading.value = true
-    const response = await databasesApi.all(1, '')
-    databases.value.push(
-      ...response.page.map((database) => ({
-        name: `${database.kind} (${database.path})`,
-        value: database.id,
-      })),
-    )
+  const response = await databasesApi.all(1, '')
+  databases.value.push(
+    ...response.page.map((database) => ({
+      name: `${database.kind} (${database.path})`,
+      value: database.id,
+    })),
+  )
 
-    if (response.page_count > 1) {
-      for (let i = 2; i <= response.page_count; i++) {
-        const pageResponse = await databasesApi.all(i, '')
-        databases.value.push(
-          ...pageResponse.page.map((database) => ({
-            name: `${database.kind} (${database.path})`,
-            value: database.id,
-          })),
-        )
-      }
+  if (response.page_count > 1) {
+    for (let i = 2; i <= response.page_count; i++) {
+      const pageResponse = await databasesApi.all(i, '')
+      databases.value.push(
+        ...pageResponse.page.map((database) => ({
+          name: `${database.kind} (${database.path})`,
+          value: database.id,
+        })),
+      )
     }
+  }
+}
+
+const fetchModel = async () => {
+  const firstResponse = await modelsApi.all(1, '')
+  const found = firstResponse.page.find((m) => m.id === modelId)
+  if (found) {
+    editModelForm.value.name = found.name
+    editModelForm.value.brandId = found.brand.id
+    return
+  }
+
+  for (let i = 2; i <= firstResponse.page_count; i++) {
+    const pageResponse = await modelsApi.all(i, '')
+    const found = pageResponse.page.find((m) => m.id === modelId)
+    if (found) {
+      editModelForm.value.name = found.name
+      editModelForm.value.brandId = found.brand.id
+      return
+    }
+  }
+
+  fetchFailed.value = true
+}
+
+const fetchMeasurements = async () => {
+  for (const db of databases.value) {
+    const dbMeasurements = await measurementsApi.all(db.value, modelId)
+    measurements.value.push(...dbMeasurements)
+  }
+}
+
+const saveMeasurement = async () => {
+  saving.value = true
+  try {
+    let leftChannelText: string | undefined
+    let rightChannelText: string | undefined
+
+    if (newMeasurement.value.leftChannel.length > 0) {
+      leftChannelText = await newMeasurement.value.leftChannel[0].text()
+    }
+    if (newMeasurement.value.rightChannel.length > 0) {
+      rightChannelText = await newMeasurement.value.rightChannel[0].text()
+    }
+
+    const created = await measurementsApi.create({
+      model_id: modelId,
+      database_id: newMeasurement.value.databaseId,
+      kind: newMeasurement.value.type,
+      label: newMeasurement.value.label,
+      left_channel: leftChannelText,
+      right_channel: rightChannelText,
+    })
+
+    measurements.value.push(created)
+    toast.success('Measurement created successfully!')
+
+    newMeasurement.value = {
+      ...initialMeasurementFormState,
+      leftChannel: [],
+      rightChannel: [],
+    }
+    closeAddMeasurementModal()
+  } catch (error) {
+    console.error(error)
+    toast.error('Failed to create measurement.')
+  } finally {
+    saving.value = false
+  }
+}
+
+const deleteMeasurement = async (id: string) => {
+  try {
+    await measurementsApi.remove(id)
+    measurements.value = measurements.value.filter((m) => m.id !== id)
+    toast.success('Measurement deleted successfully!')
+  } catch (error) {
+    console.error(error)
+    toast.error('Failed to delete measurement.')
+  }
+}
+
+const saveEvaluation = async () => {
+  saving.value = true
+  try {
+    if (existingEvaluation.value) {
+      const updated = await evaluationsApi.update(existingEvaluation.value.id, {
+        review_score: newEvaluation.value.reviewScore,
+        review_url: newEvaluation.value.reviewUrl,
+        shop_url: newEvaluation.value.shopUrl,
+      })
+      existingEvaluation.value = updated
+      toast.success('Evaluation updated successfully!')
+    } else {
+      const created = await evaluationsApi.create({
+        model_id: modelId,
+        review_score: newEvaluation.value.reviewScore,
+        review_url: newEvaluation.value.reviewUrl,
+        shop_url: newEvaluation.value.shopUrl,
+      })
+      existingEvaluation.value = created
+      toast.success('Evaluation created successfully!')
+    }
+  } catch (error: any) {
+    if (error.response?.status === 409) {
+      toast.error('An evaluation already exists for this model.')
+    } else {
+      console.error(error)
+      toast.error('Failed to save evaluation.')
+    }
+  } finally {
+    saving.value = false
+  }
+}
+
+onMounted(async () => {
+  loading.value = true
+  try {
+    await Promise.all([fetchBrands(), fetchDatabases(), fetchModel()])
+    await fetchMeasurements()
   } catch (error) {
     console.error(error)
     fetchFailed.value = true
   } finally {
     loading.value = false
   }
-}
-
-const convertToAPIModel = (form: Model): APIModel => ({
-  name: form.name,
-  brandId: form.brandId,
-})
-
-const updateModel = async () => {
-  // loading.value = true
-  // try {
-  //   const apiModel: APIModel = convertToAPIModel(editModelForm.value)
-  //   await modelsApi.update(route.params.id as string, apiModel)
-  // }
-}
-
-const saveMeasurement = () => {
-  // Implement measurement saving logic
-  closeAddMeasurementModal()
-}
-
-onMounted(() => {
-  fetchBrands()
-  fetchDatabases()
-  // TODO: Fetch the model data based on route.params.id
 })
 </script>
 
@@ -155,7 +256,9 @@ onMounted(() => {
       >
         Cancel
       </fwb-button>
-      <fwb-button color="default" size="md" @click="updateModel">Save</fwb-button>
+      <fwb-button color="default" size="md" @click="saveEvaluation" :disabled="saving">
+        {{ saving ? 'Saving...' : 'Save' }}
+      </fwb-button>
     </template>
 
     <template #content>
@@ -168,6 +271,7 @@ onMounted(() => {
               :options="brands"
               label="Brand"
               placeholder="required"
+              disabled
             />
             <fwb-input
               label="Model name"
@@ -175,20 +279,37 @@ onMounted(() => {
               placeholder="required"
               size="md"
               v-model="editModelForm.name"
-              required
+              disabled
             />
 
             <div>
               <div class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Measurements
               </div>
-              <fwb-card class="flex justify-end p-4 !max-w-full">
-                <fwb-button color="default" size="sm" @click="openAddMeasurementModal">
-                  Add new measurement
-                  <template #suffix>
-                    <Icon icon="flowbite:plus-outline" width="16" height="16" />
-                  </template>
-                </fwb-button>
+              <fwb-card class="p-4 !max-w-full">
+                <div
+                  v-for="measurement in measurements"
+                  :key="measurement.id"
+                  class="flex justify-between items-center p-3 bg-gray-800 rounded-lg mb-2"
+                >
+                  <div>
+                    <span class="text-sm font-medium text-white">{{ measurement.label }}</span>
+                    <span class="text-xs text-gray-400 ml-2">
+                      ({{ measurementTypeLabel(measurement.kind) }})
+                    </span>
+                  </div>
+                  <fwb-button color="red" size="xs" @click="deleteMeasurement(measurement.id)">
+                    Delete
+                  </fwb-button>
+                </div>
+                <div class="flex justify-end" :class="{ 'mt-2': measurements.length > 0 }">
+                  <fwb-button color="default" size="sm" @click="openAddMeasurementModal">
+                    Add new measurement
+                    <template #suffix>
+                      <Icon icon="flowbite:plus-outline" width="16" height="16" />
+                    </template>
+                  </fwb-button>
+                </div>
               </fwb-card>
             </div>
 
@@ -198,8 +319,8 @@ onMounted(() => {
               </div>
               <fwb-card class="p-4 !max-w-full">
                 <div class="flex justify-end mb-6">
-                  <fwb-button color="default" size="sm">
-                    Add evaluation
+                  <fwb-button color="default" size="sm" @click="saveEvaluation" :disabled="saving">
+                    {{ existingEvaluation ? 'Update evaluation' : 'Add evaluation' }}
                     <template #suffix>
                       <Icon icon="flowbite:plus-outline" width="16" height="16" />
                     </template>
@@ -249,6 +370,12 @@ onMounted(() => {
                 v-model="newMeasurement.label"
               />
               <fwb-select v-model="newMeasurement.type" :options="measurementTypes" label="Type" />
+              <fwb-select
+                v-model="newMeasurement.databaseId"
+                :options="databases"
+                label="Database"
+                placeholder="required"
+              />
 
               <Separator />
 
@@ -265,7 +392,9 @@ onMounted(() => {
               <fwb-button color="alternative" size="md" @click="closeAddMeasurementModal">
                 Cancel
               </fwb-button>
-              <fwb-button color="default" size="md" @click="saveMeasurement">Save</fwb-button>
+              <fwb-button color="default" size="md" @click="saveMeasurement" :disabled="saving">
+                {{ saving ? 'Saving...' : 'Save' }}
+              </fwb-button>
             </template>
           </Form>
         </template>

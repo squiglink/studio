@@ -52,12 +52,15 @@ const convertToAPIModel = (form: Model): APICreateModel => ({
 })
 
 const createModel = async () => {
-  // TODO: Handle errors?
   loading.value = true
   try {
     const apiModel: APICreateModel = convertToAPIModel(newModelForm.value)
-    await modelsApi.create(apiModel)
-    router.push({ name: 'models' })
+    const createdModel = await modelsApi.create(apiModel)
+    toast.success('Model created successfully!')
+    router.push({
+      name: 'editModel',
+      params: { id: createdModel.id },
+    })
   } catch (error) {
     console.error(error)
   } finally {
