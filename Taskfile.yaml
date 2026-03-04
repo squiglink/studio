@@ -1,0 +1,58 @@
+tasks:
+  build:
+    desc: Build the application.
+    cmds:
+      - docker compose --file docker-compose.dev.yml run --rm studio pnpm vue-tsc --build --force
+      - docker compose --file docker-compose.dev.yml run --rm studio pnpm vite build
+
+  check:
+    desc: Check everything.
+    cmds:
+      - task: check-formatting
+      - task: check-linting
+      - task: check-types
+      - task: check-tests
+
+  check-formatting:
+    desc: Check formatting.
+    cmds:
+      - docker compose --file docker-compose.dev.yml run --rm studio pnpm oxfmt --check {{.CLI_ARGS}}
+
+  check-linting:
+    desc: Check linting.
+    cmds:
+      - docker compose --file docker-compose.dev.yml run --rm studio pnpm oxlint --deny-warnings {{.CLI_ARGS}}
+
+  check-tests:
+    desc: Check tests.
+    cmds:
+      - docker compose --file docker-compose.dev.yml run --rm studio pnpm vitest run {{.CLI_ARGS}}
+
+  check-types:
+    desc: Check types.
+    cmds:
+      - docker compose --file docker-compose.dev.yml run --rm studio pnpm vue-tsc --build --force {{.CLI_ARGS}}
+
+  fix-formatting:
+    desc: Fix formatting.
+    cmds:
+      - docker compose --file docker-compose.dev.yml run --rm studio pnpm oxfmt --write {{.CLI_ARGS}}
+
+  install-dependencies:
+    desc: Install dependencies.
+    cmds:
+      - docker compose --file docker-compose.dev.yml run --rm studio pnpm install
+
+  list:
+    aliases:
+      - default
+    desc: List available tasks.
+    cmds:
+      - task --list
+
+  start:
+    desc: Start the application.
+    cmds:
+      - docker compose --file docker-compose.dev.yml up
+
+version: 3

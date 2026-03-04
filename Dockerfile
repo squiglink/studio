@@ -13,7 +13,7 @@ RUN npm install -g pnpm
 WORKDIR /studio
 COPY . .
 RUN pnpm install --frozen-lockfile
-RUN pnpm build
+RUN pnpm vue-tsc --build --force && pnpm vite build
 
 # Production stage
 FROM node:23.4-alpine3.20 AS production-runner

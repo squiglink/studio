@@ -3,18 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
-    "test:unit": "vitest",
-    "test:e2e": "playwright test",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --build --force",
-    "format:check": "oxfmt --check",
-    "format:write": "oxfmt --write",
-    "lint": "oxlint --deny-warnings"
-  },
   "dependencies": {
     "@fontsource/inter": "^5.2.6",
     "@tailwindcss/vite": "^4.1.11",
@@ -38,7 +26,6 @@
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.21",
     "jsdom": "^26.1.0",
-    "npm-run-all2": "^8.0.4",
     "oxfmt": "^0.36.0",
     "oxlint": "^1.51.0",
     "tailwindcss": "^4.1.11",
