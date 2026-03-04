@@ -52,11 +52,11 @@ serverClient.interceptors.response.use(
         const response = await axios.post(
           `${import.meta.env.VITE_BASE_SERVER_URL}/authorization/refresh`,
           {
-            refreshToken: authorizationStore.refreshToken,
+            refresh_token: authorizationStore.refreshToken,
           },
         );
-        authorizationStore.setAccessToken(response.data.accessToken);
-        authorizationStore.setRefreshToken(response.data.refreshToken);
+        authorizationStore.setAccessToken(response.data.access_token);
+        authorizationStore.setRefreshToken(response.data.refresh_token);
         return serverClient(originalRequest);
       } catch (refreshError) {
         console.error("Token refresh failed");
