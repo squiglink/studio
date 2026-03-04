@@ -8,13 +8,13 @@ import Form from '@/components/Form.vue'
 import SideModal from '@/components/SideModal.vue'
 import Separator from '@/components/Separator.vue'
 import Dropzone from '@/components/Dropzone.vue'
-import { databasesApi } from '@/utils/api/databases'
-import { brandsApi } from '@/utils/api/brands'
-import { modelsApi } from '@/utils/api/models'
-import { measurementsApi } from '@/utils/api/measurements'
-import type { APIMeasurement } from '@/utils/api/measurements'
-import { evaluationsApi } from '@/utils/api/evaluations'
-import type { APIEvaluation } from '@/utils/api/evaluations'
+import { databasesServer } from '@/utils/server/databases'
+import { brandsServer } from '@/utils/server/brands'
+import { modelsServer } from '@/utils/server/models'
+import { measurementsServer } from '@/utils/server/measurements'
+import type { ServerMeasurement } from '@/utils/server/measurements'
+import { evaluationsServer } from '@/utils/server/evaluations'
+import type { ServerEvaluation } from '@/utils/server/evaluations'
 import NetworkError from '@/components/NetworkError.vue'
 
 const route = useRoute()
@@ -64,8 +64,8 @@ const newMeasurement = ref<Measurement>({
 })
 const newEvaluation = ref<Evaluation>({ ...initialEvaluationFormState })
 
-const measurements = ref<APIMeasurement[]>([])
-const existingEvaluation = ref<APIEvaluation | null>(null)
+const measurements = ref<ServerMeasurement[]>([])
+const existingEvaluation = ref<ServerEvaluation | null>(null)
 
 const measurementTypes = [
   { name: 'Frequency response', value: 'frequency_response' },
@@ -82,12 +82,12 @@ const databases = ref([] as { name: string; value: string }[])
 const brands = ref([] as { name: string; value: string }[])
 
 const fetchBrands = async () => {
-  const response = await brandsApi.all(1, '')
+  const response = await brandsServer.all(1, '')
   brands.value.push(...response.page.map((brand) => ({ name: brand.name, value: brand.id })))
 
   if (response.page_count > 1) {
     for (let i = 2; i <= response.page_count; i++) {
-      const pageResponse = await brandsApi.all(i, '')
+      const pageResponse = await brandsServer.all(i, '')
       brands.value.push(
         ...pageResponse.page.map((brand) => ({ name: brand.name, value: brand.id })),
       )
@@ -96,7 +96,7 @@ const fetchBrands = async () => {
 }
 
 const fetchDatabases = async () => {
-  const response = await databasesApi.all(1, '')
+  const response = await databasesServer.all(1, '')
   databases.value.push(
     ...response.page.map((database) => ({
       name: `${database.kind} (${database.path})`,
@@ -106,7 +106,7 @@ const fetchDatabases = async () => {
 
   if (response.page_count > 1) {
     for (let i = 2; i <= response.page_count; i++) {
-      const pageResponse = await databasesApi.all(i, '')
+      const pageResponse = await databasesServer.all(i, '')
       databases.value.push(
         ...pageResponse.page.map((database) => ({
           name: `${database.kind} (${database.path})`,
@@ -118,7 +118,7 @@ const fetchDatabases = async () => {
 }
 
 const fetchModel = async () => {
-  const firstResponse = await modelsApi.all(1, '')
+  const firstResponse = await modelsServer.all(1, '')
   const found = firstResponse.page.find((m) => m.id === modelId)
   if (found) {
     editModelForm.value.name = found.name
@@ -127,7 +127,7 @@ const fetchModel = async () => {
   }
 
   for (let i = 2; i <= firstResponse.page_count; i++) {
-    const pageResponse = await modelsApi.all(i, '')
+    const pageResponse = await modelsServer.all(i, '')
     const found = pageResponse.page.find((m) => m.id === modelId)
     if (found) {
       editModelForm.value.name = found.name
@@ -141,7 +141,7 @@ const fetchModel = async () => {
 
 const fetchMeasurements = async () => {
   for (const db of databases.value) {
-    const dbMeasurements = await measurementsApi.all(db.value, modelId)
+    const dbMeasurements = await measurementsServer.all(db.value, modelId)
     measurements.value.push(...dbMeasurements)
   }
 }
@@ -159,7 +159,7 @@ const saveMeasurement = async () => {
       rightChannelText = await newMeasurement.value.rightChannel[0].text()
     }
 
-    const created = await measurementsApi.create({
+    const created = await measurementsServer.create({
       model_id: modelId,
       database_id: newMeasurement.value.databaseId,
       kind: newMeasurement.value.type,
@@ -187,7 +187,7 @@ const saveMeasurement = async () => {
 
 const deleteMeasurement = async (id: string) => {
   try {
-    await measurementsApi.remove(id)
+    await measurementsServer.remove(id)
     measurements.value = measurements.value.filter((m) => m.id !== id)
     toast.success('Measurement deleted successfully!')
   } catch (error) {
@@ -200,7 +200,7 @@ const saveEvaluation = async () => {
   saving.value = true
   try {
     if (existingEvaluation.value) {
-      const updated = await evaluationsApi.update(existingEvaluation.value.id, {
+      const updated = await evaluationsServer.update(existingEvaluation.value.id, {
         review_score: newEvaluation.value.reviewScore,
         review_url: newEvaluation.value.reviewUrl,
         shop_url: newEvaluation.value.shopUrl,
@@ -208,7 +208,7 @@ const saveEvaluation = async () => {
       existingEvaluation.value = updated
       toast.success('Evaluation updated successfully!')
     } else {
-      const created = await evaluationsApi.create({
+      const created = await evaluationsServer.create({
         model_id: modelId,
         review_score: newEvaluation.value.reviewScore,
         review_url: newEvaluation.value.reviewUrl,

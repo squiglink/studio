@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { modelsApi } from '@/utils/api/models'
+import { modelsServer } from '@/utils/server/models'
 
-import type { APIModel } from '@/utils/api/models'
+import type { ServerModel } from '@/utils/server/models'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
@@ -18,7 +18,7 @@ const tableColumns = [
   { name: 'Last modified', key: 'updated_at' },
 ]
 
-const models = ref([] as APIModel[])
+const models = ref([] as ServerModel[])
 const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
 const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ''))
 const pageCount = ref(1)
@@ -28,7 +28,7 @@ const fetchFailed = ref(false)
 const fetchModels = async () => {
   loading.value = true
   try {
-    const response = await modelsApi.all(page.value, searchQuery.value)
+    const response = await modelsServer.all(page.value, searchQuery.value)
     models.value = response.page
     pageCount.value = response.page_count
   } catch (error) {

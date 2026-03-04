@@ -5,9 +5,9 @@ import { useRouter } from 'vue-router'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Form from '@/components/Form.vue'
-import { brandsApi } from '@/utils/api/brands'
-import { modelsApi } from '@/utils/api/models'
-import type { APICreateModel } from '@/utils/api/models'
+import { brandsServer } from '@/utils/server/brands'
+import { modelsServer } from '@/utils/server/models'
+import type { ServerCreateModel } from '@/utils/server/models'
 import NetworkError from '@/components/NetworkError.vue'
 
 const router = useRouter()
@@ -27,12 +27,12 @@ const brands = ref([] as { name: string; value: string }[])
 const fetchBrands = async () => {
   try {
     loading.value = true
-    const response = await brandsApi.all(1, '')
+    const response = await brandsServer.all(1, '')
     brands.value.push(...response.page.map((brand) => ({ name: brand.name, value: brand.id })))
 
     if (response.page_count > 1) {
       for (let i = 2; i <= response.page_count; i++) {
-        const pageResponse = await brandsApi.all(i, '')
+        const pageResponse = await brandsServer.all(i, '')
         brands.value.push(
           ...pageResponse.page.map((brand) => ({ name: brand.name, value: brand.id })),
         )
@@ -46,7 +46,7 @@ const fetchBrands = async () => {
   }
 }
 
-const convertToAPIModel = (form: Model): APICreateModel => ({
+const convertToServerModel = (form: Model): ServerCreateModel => ({
   name: form.name,
   brand_id: form.brandId,
 })
@@ -54,8 +54,8 @@ const convertToAPIModel = (form: Model): APICreateModel => ({
 const createModel = async () => {
   loading.value = true
   try {
-    const apiModel: APICreateModel = convertToAPIModel(newModelForm.value)
-    const createdModel = await modelsApi.create(apiModel)
+    const serverModel: ServerCreateModel = convertToServerModel(newModelForm.value)
+    const createdModel = await modelsServer.create(serverModel)
     toast.success('Model created successfully!')
     router.push({
       name: 'editModel',

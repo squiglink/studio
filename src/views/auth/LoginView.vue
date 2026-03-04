@@ -2,7 +2,7 @@
 import { onBeforeMount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { authorizationApi } from '@/utils/api/authorization'
+import { authorizationServer } from '@/utils/server/authorization'
 import { useAuthorizationStore } from '@/stores/authorization'
 
 import BlankLayout from '@/layouts/BlankLayout.vue'
@@ -25,7 +25,7 @@ const turnstileToken = ref('')
 
 const login = async () => {
   loginState.value = 'loading'
-  const result = await authorizationApi.login(email.value, turnstileToken.value)
+  const result = await authorizationServer.login(email.value, turnstileToken.value)
   if (result) {
     loginState.value = 'success'
   } else {

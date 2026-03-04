@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { brandsApi } from '@/utils/api/brands'
+import { brandsServer } from '@/utils/server/brands'
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { APIBrand } from '@/utils/api/brands'
+import type { ServerBrand } from '@/utils/server/brands'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
@@ -18,7 +18,7 @@ const tableColumns = [
   { name: 'Last modified', key: 'updated_at' },
 ]
 
-const brands = ref([] as APIBrand[])
+const brands = ref([] as ServerBrand[])
 const pageCount = ref(1)
 const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
 const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ''))
@@ -28,7 +28,7 @@ const fetchFailed = ref(false)
 const fetchBrands = async () => {
   loading.value = true
   try {
-    const response = await brandsApi.all(page.value, searchQuery.value)
+    const response = await brandsServer.all(page.value, searchQuery.value)
     brands.value = response.page
     pageCount.value = response.page_count
   } catch (error) {

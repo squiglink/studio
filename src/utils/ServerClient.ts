@@ -12,17 +12,17 @@ export type ServerError = {
   errors: string[]
 }
 
-export interface APIPage<T> {
+export interface ServerPage<T> {
   page: T[]
   page_count: number
 }
 
-export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_BASE_API_URL,
+export const serverClient = axios.create({
+  baseURL: import.meta.env.VITE_BASE_SERVER_URL,
   timeout: 5000,
 })
 
-// apiClient.interceptors.response.use(
+// serverClient.interceptors.response.use(
 //   (response) => response,
 //   (error) => {
 //     toast(`${error.name}: ${error.message} (${error.code})`, {
@@ -36,7 +36,7 @@ export const apiClient = axios.create({
 //   },
 // )
 
-apiClient.interceptors.request.use(
+serverClient.interceptors.request.use(
   (request) => {
     const publicEndpoints = ['/authorization/login', '/authorization/verify']
     const isPublicEndpoint = publicEndpoints.some((ep) => request.url?.includes(ep))
@@ -59,7 +59,7 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error),
 )
 
-apiClient.interceptors.response.use(
+serverClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config
@@ -73,14 +73,14 @@ apiClient.interceptors.response.use(
 
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_BASE_API_URL}/authorization/refresh`,
+          `${import.meta.env.VITE_BASE_SERVER_URL}/authorization/refresh`,
           {
             refreshToken: authorizationStore.refreshToken,
           },
         )
         authorizationStore.setAccessToken(response.data.accessToken)
         authorizationStore.setRefreshToken(response.data.refreshToken)
-        return apiClient(originalRequest)
+        return serverClient(originalRequest)
       } catch (refreshError) {
         console.error('Token refresh failed')
         authorizationStore.clearTokens()

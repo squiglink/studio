@@ -1,14 +1,14 @@
-import { apiClient } from '../ApiClient'
+import { serverClient } from '../ServerClient'
 
 interface AuthResponse {
   access_token: string
   refresh_token: string
 }
 
-export const authorizationApi = {
+export const authorizationServer = {
   async login(email: string, cloudflareTurnstileToken: string): Promise<boolean> {
     try {
-      const response = await apiClient.post('/authorization/login', {
+      const response = await serverClient.post('/authorization/login', {
         email,
         cloudflareTurnstileToken,
       })
@@ -24,7 +24,7 @@ export const authorizationApi = {
   },
 
   async verify(token: string): Promise<AuthResponse> {
-    const response = await apiClient.get<AuthResponse>('/authorization/verify', {
+    const response = await serverClient.get<AuthResponse>('/authorization/verify', {
       params: { token: token },
     })
 

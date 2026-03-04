@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { brandsApi } from '@/utils/api/brands'
+import { brandsServer } from '@/utils/server/brands'
 import { ref, onMounted } from 'vue'
 import { toast } from 'vue3-toastify'
 import { useRouter, useRoute } from 'vue-router'
 
-import type { APIBrand } from '@/utils/api/brands'
+import type { ServerBrand } from '@/utils/server/brands'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Form from '@/components/Form.vue'
@@ -22,18 +22,18 @@ const loading = ref(false)
 const fetchFailed = ref(false)
 const editBrandForm = ref<Brand>(initialBrandFormState)
 
-const convertToAPIBrand = (form: Brand): APIBrand => ({
+const convertToServerBrand = (form: Brand): ServerBrand => ({
   name: form.name,
 })
 
 const updateBrand = async () => {
   loading.value = true
   try {
-    const apiBrand: APIBrand = {
-      ...convertToAPIBrand(editBrandForm.value),
+    const serverBrand: ServerBrand = {
+      ...convertToServerBrand(editBrandForm.value),
       id: route.params.id as string,
     }
-    await brandsApi.edit(apiBrand)
+    await brandsServer.edit(serverBrand)
 
     toast.success('Brand updated successfully!')
 

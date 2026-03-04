@@ -26,7 +26,7 @@ jobs:
           context: .
           file: ./Dockerfile
           build-args: |
-            VITE_BASE_API_URL=${{ vars.VITE_BASE_API_URL }}
+            VITE_BASE_SERVER_URL=${{ vars.VITE_BASE_SERVER_URL }}
             VITE_CLOUDFLARE_TURNSTILE_ENABLED=${{ vars.VITE_CLOUDFLARE_TURNSTILE_ENABLED }}
             VITE_CLOUDFLARE_TURNSTILE_SITE_KEY=${{ secrets.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY }}
           push: true

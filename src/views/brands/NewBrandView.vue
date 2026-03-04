@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { brandsApi } from '@/utils/api/brands'
+import { brandsServer } from '@/utils/server/brands'
 import { ref } from 'vue'
 import { toast } from 'vue3-toastify'
 import { useRouter } from 'vue-router'
 
-import type { APIBrand } from '@/utils/api/brands'
+import type { ServerBrand } from '@/utils/server/brands'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Form from '@/components/Form.vue'
@@ -19,15 +19,15 @@ const initialBrandFormState: Brand = {
 const loading = ref(false)
 const newBrandForm = ref<Brand>(initialBrandFormState)
 
-const convertToAPIBrand = (form: Brand): APIBrand => ({
+const convertToServerBrand = (form: Brand): ServerBrand => ({
   name: form.name,
 })
 
 const createBrand = async () => {
   loading.value = true
   try {
-    const apiBrand: APIBrand = convertToAPIBrand(newBrandForm.value)
-    await brandsApi.create(apiBrand)
+    const serverBrand: ServerBrand = convertToServerBrand(newBrandForm.value)
+    await brandsServer.create(serverBrand)
 
     toast.success('Brand created successfully!')
 

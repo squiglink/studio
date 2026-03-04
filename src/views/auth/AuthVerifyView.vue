@@ -2,7 +2,7 @@
 import { onBeforeMount, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { authorizationApi } from '@/utils/api/authorization'
+import { authorizationServer } from '@/utils/server/authorization'
 import { useAuthorizationStore } from '@/stores/authorization'
 
 import BlankLayout from '@/layouts/BlankLayout.vue'
@@ -26,7 +26,7 @@ onBeforeMount(async () => {
     return
   }
 
-  const response = await authorizationApi.verify(token)
+  const response = await authorizationServer.verify(token)
   if (!response) {
     router.replace({ name: 'login' })
     return
