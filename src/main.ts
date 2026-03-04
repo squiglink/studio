@@ -14,6 +14,8 @@ import {
   FwbButton,
   FwbButtonGroup,
   FwbCard,
+  FwbFileInput,
+  FwbHeading,
   FwbInput,
   FwbPagination,
   FwbSelect,
@@ -41,6 +43,8 @@ const components = {
   FwbButton,
   FwbButtonGroup,
   FwbCard,
+  FwbFileInput,
+  FwbHeading,
   FwbInput,
   FwbPagination,
   FwbSelect,
@@ -66,7 +70,13 @@ app.use(createPinia())
 app.use(router)
 app.use(Vue3Toastify, {
   autoClose: 3000,
-  // ...
+  position: 'top-center',
+  theme: 'dark',
+  multiple: false,
+  transition: 'slide',
+  clearOnUrlChange: false,
+  pauseOnHover: true,
+  pauseOnFocusLoss: false,
 } as ToastContainerOptions)
 
 app.mount('#app')

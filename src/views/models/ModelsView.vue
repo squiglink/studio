@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { brandsApi } from '@/utils/api/brands'
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { modelsApi } from '@/utils/api/models'
 
-import type { APIBrand, APIBrands } from '@/utils/api/brands'
+import type { APIModel } from '@/utils/api/models'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import Table from '@/components/Table.vue'
@@ -12,24 +12,24 @@ import NetworkError from '@/components/NetworkError.vue'
 const route = useRoute()
 
 const tableColumns = [
-  { name: 'Brand', key: 'name', path: '/brands/' },
-  { name: 'Models', key: 'model_count' },
+  { name: 'Name', key: 'name', path: '/models/', pathSuffix: '/edit' },
+  { name: 'Brand', nestedKey: ['brand', 'name'] },
   { name: 'Created', key: 'created_at' },
   { name: 'Last modified', key: 'updated_at' },
 ]
 
-const brands = ref([] as APIBrand[])
-const pageCount = ref(1)
+const models = ref([] as APIModel[])
 const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
 const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ''))
+const pageCount = ref(1)
 const loading = ref(false)
 const fetchFailed = ref(false)
 
-const fetchBrands = async () => {
+const fetchModels = async () => {
   loading.value = true
   try {
-    const response = await brandsApi.all(page.value, searchQuery.value)
-    brands.value = response.page
+    const response = await modelsApi.all(page.value, searchQuery.value)
+    models.value = response.page
     pageCount.value = response.page_count
   } catch (error) {
     fetchFailed.value = true
@@ -40,23 +40,23 @@ const fetchBrands = async () => {
 }
 
 watch([page, searchQuery], () => {
-  fetchBrands()
+  fetchModels()
 })
 
 onMounted(() => {
-  fetchBrands()
+  fetchModels()
 })
 </script>
 
 <template>
   <MainLayout>
-    <template #header-text v-if="!fetchFailed">Brands</template>
+    <template #header-text v-if="!fetchFailed">Models</template>
 
     <template #content>
       <NetworkError v-if="fetchFailed" />
       <Table
         v-else
-        v-model="brands"
+        v-model="models"
         v-model:current-page="page"
         v-model:loading="loading"
         :enable-search="true"
@@ -71,8 +71,8 @@ onMounted(() => {
               <Icon icon="flowbite:minus-outline" width="24" height="24" />
             </template>
           </fwb-button> -->
-          <fwb-button color="default" size="md">
-            Add new brand
+          <fwb-button color="default" size="md" tag="router-link" :href="{ name: 'newModel' }">
+            Add new model
             <template #suffix>
               <Icon icon="flowbite:plus-outline" width="16" height="16" />
             </template>

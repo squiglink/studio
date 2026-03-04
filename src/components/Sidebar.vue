@@ -17,10 +17,11 @@ const logout = () => {
     id="main-sidebar"
     class="w-72 fixed top-0 left-0 z-40 border-solid border-r border-gray-700 transition-transform -translate-x-full sm:translate-x-0"
   >
-    <fwb-sidebar-logo name="Squiglink Studio" :logo="logo" tag="router-link" />
+    <fwb-sidebar-logo name="Squiglink Studio" :logo="logo" tag="router-link" :to="{ name: 'home' }" />
 
     <fwb-sidebar-item
-      to="/databases"
+      tag="router-link"
+      :to="{ name: 'databases' }"
       :class="{ 'bg-gray-700': $route.path === '/databases' || $route.path === '/' }"
     >
       <template #icon>
@@ -30,7 +31,11 @@ const logout = () => {
       <template #default>Databases</template>
     </fwb-sidebar-item>
 
-    <fwb-sidebar-item to="/brands" :class="{ 'bg-gray-700': $route.path === '/brands' }">
+    <fwb-sidebar-item
+      tag="router-link"
+      :to="{ name: 'brands' }"
+      :class="{ 'bg-gray-700': $route.path === '/brands' }"
+    >
       <template #icon>
         <Icon icon="flowbite:grid-solid" width="24" height="24" class="text-gray-400" />
       </template>
@@ -38,7 +43,11 @@ const logout = () => {
       <template #default>Brands</template>
     </fwb-sidebar-item>
 
-    <fwb-sidebar-item to="/models" :class="{ 'bg-gray-700': $route.path === '/models' }">
+    <fwb-sidebar-item
+      tag="router-link"
+      :to="{ name: 'models' }"
+      :class="{ 'bg-gray-700': $route.path === '/models' }"
+    >
       <template #icon>
         <Icon icon="flowbite:headphones-solid" width="24" height="24" class="text-gray-400" />
       </template>
@@ -62,7 +71,7 @@ const logout = () => {
 
       <fwb-sidebar-item
         class="py-1"
-        link="https://squiglink.github.io/documentation/"
+        link="http://documentation.squig.link/"
         tag="a"
         target="_blank"
       >

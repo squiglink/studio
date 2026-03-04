@@ -14,7 +14,6 @@ const props = defineProps<{
 
 const tableRows = defineModel<object[]>()
 const currentPage = defineModel<number>('currentPage', { required: true })
-const searchQuery = defineModel<string>('searchQuery')
 const loading = defineModel<boolean>('loading', { required: true })
 const selectedRows = ref([])
 </script>
@@ -31,7 +30,14 @@ const selectedRows = ref([])
       </template>
     </TableActions>
 
-    <Loader v-if="loading" />
+    <div class="p-4 bg-gray-800 rounded-b-lg" v-if="loading">
+      <Loader>
+        <template #text>
+          <slot name="text">Fetching data...</slot>
+        </template>
+      </Loader>
+    </div>
+
     <div v-else>
       <fwb-table hoverable class="rounded-lg !rounded-t-none">
         <fwb-table-head>
@@ -62,7 +68,7 @@ const selectedRows = ref([])
             >
               <fwb-a
                 v-if="columnIndex === 0"
-                :href="`${column.path}${item['id' as keyof typeof item]}`"
+                :href="`${column.path}${item['id' as keyof typeof item]}${column.pathSuffix || ''}`"
               >
                 {{ item[column.key as keyof typeof item] }}
               </fwb-a>

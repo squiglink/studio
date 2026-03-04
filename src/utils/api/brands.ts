@@ -2,7 +2,7 @@ import { apiClient } from '../ApiClient'
 import type { APIPage } from '../ApiClient'
 
 export type APIBrand = {
-  id: number
+  id: string
   name: string
   model_count: number
 }
@@ -15,6 +15,13 @@ export const brandsApi = {
     return response.data as APIBrands
   },
 
-  // create
-  // edit
+  async create(brand: APIBrand) {
+    const response = await apiClient.post('/brands', brand)
+    return response.data as APIBrand
+  },
+
+  async edit(brand: APIBrand) {
+    const response = await apiClient.patch(`/brands/${brand.id}`, brand)
+    return response.data as APIBrand
+  },
 }

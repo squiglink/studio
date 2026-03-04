@@ -2,7 +2,7 @@ import { apiClient } from '../ApiClient'
 import type { APIPage } from '../ApiClient'
 
 export type APIDatabase = {
-  id: number
+  id: string
   kind: string
   path: string
 }
