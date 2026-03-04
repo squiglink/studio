@@ -1,72 +1,64 @@
-# Sguiglink Studio
+# Squiglink Studio
 
-## Recommended IDE Setup
+The creator-facing frontend.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Install
 
-# Project Setup
+### Development
 
-## Docker compose
+1. Install [Docker](https://www.docker.com/) and [Task](https://taskfile.dev).
 
-### Development build. Will be served on port 5173
+2. Copy the configuration file:
 
-```sh
-cp .env.example .env && \
-docker compose -f docker-compose.yml -f docker-compose.dev.yml build && \
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-```
+   ```sh
+   cp .env.example .env
+   ```
 
-### Production build. Will be served on port 8080
+3. Edit the configuration file:
 
-```sh
-cp env.example .env && docker compose build && docker compose up -d
-```
+   ```sh
+   msedit .env
+   ```
 
-## Locally
+4. Install dependencies:
 
-```sh
-pnpm install
-```
+   ```sh
+   task install-dependencies
+   ```
 
-### Compile and Hot-Reload for Development
+5. Start the application:
 
-```sh
-pnpm dev
-```
+   ```sh
+   task start
+   ```
 
-### Type-Check, Compile and Minify for Production
+Done?:
 
-```sh
-pnpm build
-```
+- Execute `task` to list available tasks.
+- Visit <http://localhost:5173>.
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+### Production
 
-```sh
-pnpm test:unit
-```
+1. Install [Docker](https://www.docker.com/).
 
-### Run End-to-End Tests with [Playwright](https://playwright.dev)
+2. Copy the configuration file:
 
-```sh
-# Install browsers for the first run
-npx playwright install
+   ```sh
+   cp .env.example .env
+   ```
 
-# When testing on CI, must build the project first
-pnpm build
+3. Edit the configuration file:
 
-# Runs the end-to-end tests
-pnpm test:e2e
-# Runs the tests only on Chromium
-pnpm test:e2e --project=chromium
-# Runs the tests of a specific file
-pnpm test:e2e tests/example.spec.ts
-# Runs the tests in debug mode
-pnpm test:e2e --debug
-```
+   ```sh
+   msedit .env
+   ```
 
-### Lint with [ESLint](https://eslint.org/)
+4. Start the application:
 
-```sh
-pnpm lint
-```
+   ```sh
+   docker compose up --detach
+   ```
+
+Done?:
+
+- Visit <http://localhost:8080>.
