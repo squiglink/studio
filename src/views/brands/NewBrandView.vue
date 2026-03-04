@@ -1,42 +1,42 @@
 <script setup lang="ts">
-import { brandsServer } from '@/utils/server/brands'
-import { ref } from 'vue'
-import { toast } from 'vue3-toastify'
-import { useRouter } from 'vue-router'
+import { brandsServer } from "@/utils/server/brands";
+import { ref } from "vue";
+import { toast } from "vue3-toastify";
+import { useRouter } from "vue-router";
 
-import type { ServerBrand } from '@/utils/server/brands'
+import type { ServerBrandPayload } from "@/utils/server/brands";
 
-import MainLayout from '@/layouts/MainLayout.vue'
-import Form from '@/components/Form.vue'
+import MainLayout from "@/layouts/MainLayout.vue";
+import Form from "@/components/Form.vue";
 
-const router = useRouter()
+const router = useRouter();
 
 const initialBrandFormState: Brand = {
-  name: '',
+  name: "",
   errors: [],
-}
+};
 
-const loading = ref(false)
-const newBrandForm = ref<Brand>(initialBrandFormState)
+const loading = ref(false);
+const newBrandForm = ref<Brand>(initialBrandFormState);
 
-const convertToServerBrand = (form: Brand): ServerBrand => ({
+const convertToServerBrand = (form: Brand): ServerBrandPayload => ({
   name: form.name,
-})
+});
 
 const createBrand = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const serverBrand: ServerBrand = convertToServerBrand(newBrandForm.value)
-    await brandsServer.create(serverBrand)
+    const serverBrand: ServerBrandPayload = convertToServerBrand(newBrandForm.value);
+    await brandsServer.create(serverBrand);
 
-    toast.success('Brand created successfully!')
+    toast.success("Brand created successfully!");
 
-    router.push({ name: 'brands' })
+    router.push({ name: "brands" });
   } catch (error) {
-    console.error(error)
-    loading.value = false
+    console.error(error);
+    loading.value = false;
   }
-}
+};
 </script>
 
 <template>

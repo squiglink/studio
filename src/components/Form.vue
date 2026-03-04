@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const errors = defineModel<string[]>({ required: true })
+const errors = defineModel<string[]>({ required: true });
 </script>
 
 <template>

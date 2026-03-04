@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted } from "vue";
 
-const modalShown = defineModel<boolean>()
+const modalShown = defineModel<boolean>();
 
 const closeModal = () => {
-  modalShown.value = false
-}
+  modalShown.value = false;
+};
 
 onMounted(() => {
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeModal()
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeModal();
     }
-  })
+  });
 
-  window.addEventListener('click', (e) => {
-    if (e.target === document.querySelector('#modal-container')) {
-      closeModal()
+  window.addEventListener("click", (e) => {
+    if (e.target === document.querySelector("#modal-container")) {
+      closeModal();
     }
-  })
-})
+  });
+});
 </script>
 
 <template>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
 
-const files = defineModel<File[]>()
-const fileInputKey = ref(0)
+const files = defineModel<File[]>();
+const fileInputKey = ref(0);
 
 const removeFile = (file: File) => {
-  files.value = files.value?.filter((f) => f !== file)
+  files.value = files.value?.filter((f) => f !== file);
   // Reset the file input to clear its internal state
-  fileInputKey.value++
-}
+  fileInputKey.value++;
+};
 </script>
 
 <template>

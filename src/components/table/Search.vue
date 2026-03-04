@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
-const search = ref(route.query.query ? String(route.query.query) : '')
-const runningTimeout = ref<number>()
+const search = ref(route.query.query ? String(route.query.query) : "");
+const runningTimeout = ref<number>();
 
 const handleInput = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value
-  search.value = value
-  window.clearTimeout(runningTimeout.value)
+  const value = (event.target as HTMLInputElement).value;
+  search.value = value;
+  window.clearTimeout(runningTimeout.value);
 
   const timeout = window.setTimeout(() => {
-    handleSearch()
-  }, 300)
+    handleSearch();
+  }, 300);
 
-  runningTimeout.value = timeout
-}
+  runningTimeout.value = timeout;
+};
 
 const handleSearch = async () => {
-  router.push({ query: { page: 1, query: search.value } })
-}
+  router.push({ query: { page: 1, query: search.value } });
+};
 </script>
 
 <template>

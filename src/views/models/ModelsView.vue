@@ -1,51 +1,51 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { modelsServer } from '@/utils/server/models'
+import { ref, onMounted, computed, watch } from "vue";
+import { useRoute } from "vue-router";
+import { modelsServer } from "@/utils/server/models";
 
-import type { ServerModel } from '@/utils/server/models'
+import type { ServerModel } from "@/utils/server/models";
 
-import MainLayout from '@/layouts/MainLayout.vue'
-import Table from '@/components/Table.vue'
-import NetworkError from '@/components/NetworkError.vue'
+import MainLayout from "@/layouts/MainLayout.vue";
+import Table from "@/components/Table.vue";
+import NetworkError from "@/components/NetworkError.vue";
 
-const route = useRoute()
+const route = useRoute();
 
 const tableColumns = [
-  { name: 'Name', key: 'name', path: '/models/', pathSuffix: '/edit' },
-  { name: 'Brand', nestedKey: ['brand', 'name'] },
-  { name: 'Created', key: 'created_at' },
-  { name: 'Last modified', key: 'updated_at' },
-]
+  { name: "Name", key: "name", path: "/models/", pathSuffix: "/edit" },
+  { name: "Brand", nestedKey: ["brand", "name"] },
+  { name: "Created", key: "created_at" },
+  { name: "Last modified", key: "updated_at" },
+];
 
-const models = ref([] as ServerModel[])
-const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
-const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ''))
-const pageCount = ref(1)
-const loading = ref(false)
-const fetchFailed = ref(false)
+const models = ref([] as ServerModel[]);
+const page = computed(() => (route.query.page ? Number(route.query.page) : 1));
+const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ""));
+const pageCount = ref(1);
+const loading = ref(false);
+const fetchFailed = ref(false);
 
 const fetchModels = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const response = await modelsServer.all(page.value, searchQuery.value)
-    models.value = response.page
-    pageCount.value = response.page_count
+    const response = await modelsServer.all(page.value, searchQuery.value);
+    models.value = response.page;
+    pageCount.value = response.page_count;
   } catch (error) {
-    fetchFailed.value = true
-    loading.value = false
+    fetchFailed.value = true;
+    loading.value = false;
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 watch([page, searchQuery], () => {
-  fetchModels()
-})
+  fetchModels();
+});
 
 onMounted(() => {
-  fetchModels()
-})
+  fetchModels();
+});
 </script>
 
 <template>

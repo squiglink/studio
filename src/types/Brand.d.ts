@@ -1,4 +1,4 @@
 interface Brand {
-  name: string
-  errors: string[]
+  name: string;
+  errors: string[];
 }

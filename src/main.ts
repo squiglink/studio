@@ -1,13 +1,13 @@
-import './assets/main.css'
-import '@fontsource/inter'
+import "./assets/main.css";
+import "@fontsource/inter";
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 
-import App from './App.vue'
-import router from './router'
+import App from "./App.vue";
+import router from "./router";
 
-import { Icon } from '@iconify/vue'
+import { Icon } from "@iconify/vue";
 import {
   FwbA,
   FwbAlert,
@@ -30,12 +30,12 @@ import {
   FwbTableHead,
   FwbTableHeadCell,
   FwbTableRow,
-} from 'flowbite-vue'
+} from "flowbite-vue";
 
-import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
-import 'vue3-toastify/dist/index.css'
+import Vue3Toastify, { type ToastContainerOptions } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
-const app = createApp(App)
+const app = createApp(App);
 
 const components = {
   FwbA,
@@ -60,23 +60,23 @@ const components = {
   FwbTableHeadCell,
   FwbTableRow,
   Icon,
-}
+};
 
 Object.entries(components).forEach(([name, component]) => {
-  app.component(name, component)
-})
+  app.component(name, component);
+});
 
-app.use(createPinia())
-app.use(router)
+app.use(createPinia());
+app.use(router);
 app.use(Vue3Toastify, {
   autoClose: 3000,
-  position: 'top-center',
-  theme: 'dark',
+  position: "top-center",
+  theme: "dark",
   multiple: false,
-  transition: 'slide',
+  transition: "slide",
   clearOnUrlChange: false,
   pauseOnHover: true,
   pauseOnFocusLoss: false,
-} as ToastContainerOptions)
+} as ToastContainerOptions);
 
-app.mount('#app')
+app.mount("#app");

@@ -1,21 +1,21 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from "vue";
 
 export function useWindowSize() {
-  const width = ref(window.innerWidth)
-  const height = ref(window.innerHeight)
+  const width = ref(window.innerWidth);
+  const height = ref(window.innerHeight);
 
   const updateSize = () => {
-    width.value = window.innerWidth
-    height.value = window.innerHeight
-  }
+    width.value = window.innerWidth;
+    height.value = window.innerHeight;
+  };
 
   onMounted(() => {
-    window.addEventListener('resize', updateSize)
-  })
+    window.addEventListener("resize", updateSize);
+  });
 
   onUnmounted(() => {
-    window.removeEventListener('resize', updateSize)
-  })
+    window.removeEventListener("resize", updateSize);
+  });
 
-  return { width, height }
+  return { width, height };
 }

@@ -1,162 +1,162 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { toast } from 'vue3-toastify'
-import { useRouter, useRoute } from 'vue-router'
+import { onMounted, ref } from "vue";
+import { toast } from "vue3-toastify";
+import { useRouter, useRoute } from "vue-router";
 
-import MainLayout from '@/layouts/MainLayout.vue'
-import Form from '@/components/Form.vue'
-import SideModal from '@/components/SideModal.vue'
-import Separator from '@/components/Separator.vue'
-import Dropzone from '@/components/Dropzone.vue'
-import { databasesServer } from '@/utils/server/databases'
-import { brandsServer } from '@/utils/server/brands'
-import { modelsServer } from '@/utils/server/models'
-import { measurementsServer } from '@/utils/server/measurements'
-import type { ServerMeasurement } from '@/utils/server/measurements'
-import { evaluationsServer } from '@/utils/server/evaluations'
-import type { ServerEvaluation } from '@/utils/server/evaluations'
-import NetworkError from '@/components/NetworkError.vue'
+import MainLayout from "@/layouts/MainLayout.vue";
+import Form from "@/components/Form.vue";
+import SideModal from "@/components/SideModal.vue";
+import Separator from "@/components/Separator.vue";
+import Dropzone from "@/components/Dropzone.vue";
+import { databasesServer } from "@/utils/server/databases";
+import { brandsServer } from "@/utils/server/brands";
+import { modelsServer } from "@/utils/server/models";
+import { measurementsServer } from "@/utils/server/measurements";
+import type { ServerMeasurement } from "@/utils/server/measurements";
+import { evaluationsServer } from "@/utils/server/evaluations";
+import type { ServerEvaluation } from "@/utils/server/evaluations";
+import NetworkError from "@/components/NetworkError.vue";
 
-const route = useRoute()
-const router = useRouter()
-const modelId = route.params.id as string
+const route = useRoute();
+const router = useRouter();
+const modelId = route.params.id as string;
 
-const addMeasurementModalShown = ref(false)
-const loading = ref(false)
-const saving = ref(false)
-const fetchFailed = ref(false)
+const addMeasurementModalShown = ref(false);
+const loading = ref(false);
+const saving = ref(false);
+const fetchFailed = ref(false);
 
 const openAddMeasurementModal = () => {
-  addMeasurementModalShown.value = true
-}
+  addMeasurementModalShown.value = true;
+};
 
 const closeAddMeasurementModal = () => {
-  addMeasurementModalShown.value = false
-}
+  addMeasurementModalShown.value = false;
+};
 
 const initialModelFormState: Model = {
-  name: '',
-  brandId: '',
+  name: "",
+  brandId: "",
   errors: [],
-}
+};
 
 const initialMeasurementFormState: Measurement = {
-  label: '',
-  type: '',
-  databaseId: '',
+  label: "",
+  type: "",
+  databaseId: "",
   leftChannel: [],
   rightChannel: [],
   errors: [],
-}
+};
 
 const initialEvaluationFormState: Evaluation = {
   reviewUrl: null,
   reviewScore: null,
   shopUrl: null,
   errors: [],
-}
+};
 
-const editModelForm = ref<Model>({ ...initialModelFormState })
+const editModelForm = ref<Model>({ ...initialModelFormState });
 const newMeasurement = ref<Measurement>({
   ...initialMeasurementFormState,
   leftChannel: [],
   rightChannel: [],
-})
-const newEvaluation = ref<Evaluation>({ ...initialEvaluationFormState })
+});
+const newEvaluation = ref<Evaluation>({ ...initialEvaluationFormState });
 
-const measurements = ref<ServerMeasurement[]>([])
-const existingEvaluation = ref<ServerEvaluation | null>(null)
+const measurements = ref<ServerMeasurement[]>([]);
+const existingEvaluation = ref<ServerEvaluation | null>(null);
 
 const measurementTypes = [
-  { name: 'Frequency response', value: 'frequency_response' },
-  { name: 'Harmonic distortion', value: 'harmonic_distortion' },
-  { name: 'Impedance', value: 'impedance' },
-  { name: 'Sound isolation', value: 'sound_isolation' },
-]
+  { name: "Frequency response", value: "frequency_response" },
+  { name: "Harmonic distortion", value: "harmonic_distortion" },
+  { name: "Impedance", value: "impedance" },
+  { name: "Sound isolation", value: "sound_isolation" },
+];
 
 const measurementTypeLabel = (kind: string) => {
-  return measurementTypes.find((t) => t.value === kind)?.name ?? kind
-}
+  return measurementTypes.find((t) => t.value === kind)?.name ?? kind;
+};
 
-const databases = ref([] as { name: string; value: string }[])
-const brands = ref([] as { name: string; value: string }[])
+const databases = ref([] as { name: string; value: string }[]);
+const brands = ref([] as { name: string; value: string }[]);
 
 const fetchBrands = async () => {
-  const response = await brandsServer.all(1, '')
-  brands.value.push(...response.page.map((brand) => ({ name: brand.name, value: brand.id })))
+  const response = await brandsServer.all(1, "");
+  brands.value.push(...response.page.map((brand) => ({ name: brand.name, value: brand.id })));
 
   if (response.page_count > 1) {
     for (let i = 2; i <= response.page_count; i++) {
-      const pageResponse = await brandsServer.all(i, '')
+      const pageResponse = await brandsServer.all(i, "");
       brands.value.push(
         ...pageResponse.page.map((brand) => ({ name: brand.name, value: brand.id })),
-      )
+      );
     }
   }
-}
+};
 
 const fetchDatabases = async () => {
-  const response = await databasesServer.all(1, '')
+  const response = await databasesServer.all(1, "");
   databases.value.push(
     ...response.page.map((database) => ({
       name: `${database.kind} (${database.path})`,
       value: database.id,
     })),
-  )
+  );
 
   if (response.page_count > 1) {
     for (let i = 2; i <= response.page_count; i++) {
-      const pageResponse = await databasesServer.all(i, '')
+      const pageResponse = await databasesServer.all(i, "");
       databases.value.push(
         ...pageResponse.page.map((database) => ({
           name: `${database.kind} (${database.path})`,
           value: database.id,
         })),
-      )
+      );
     }
   }
-}
+};
 
 const fetchModel = async () => {
-  const firstResponse = await modelsServer.all(1, '')
-  const found = firstResponse.page.find((m) => m.id === modelId)
+  const firstResponse = await modelsServer.all(1, "");
+  const found = firstResponse.page.find((m) => m.id === modelId);
   if (found) {
-    editModelForm.value.name = found.name
-    editModelForm.value.brandId = found.brand.id
-    return
+    editModelForm.value.name = found.name;
+    editModelForm.value.brandId = found.brand.id;
+    return;
   }
 
   for (let i = 2; i <= firstResponse.page_count; i++) {
-    const pageResponse = await modelsServer.all(i, '')
-    const found = pageResponse.page.find((m) => m.id === modelId)
+    const pageResponse = await modelsServer.all(i, "");
+    const found = pageResponse.page.find((m) => m.id === modelId);
     if (found) {
-      editModelForm.value.name = found.name
-      editModelForm.value.brandId = found.brand.id
-      return
+      editModelForm.value.name = found.name;
+      editModelForm.value.brandId = found.brand.id;
+      return;
     }
   }
 
-  fetchFailed.value = true
-}
+  fetchFailed.value = true;
+};
 
 const fetchMeasurements = async () => {
   for (const db of databases.value) {
-    const dbMeasurements = await measurementsServer.all(db.value, modelId)
-    measurements.value.push(...dbMeasurements)
+    const dbMeasurements = await measurementsServer.all(db.value, modelId);
+    measurements.value.push(...dbMeasurements);
   }
-}
+};
 
 const saveMeasurement = async () => {
-  saving.value = true
+  saving.value = true;
   try {
-    let leftChannelText: string | undefined
-    let rightChannelText: string | undefined
+    let leftChannelText: string | undefined;
+    let rightChannelText: string | undefined;
 
     if (newMeasurement.value.leftChannel.length > 0) {
-      leftChannelText = await newMeasurement.value.leftChannel[0].text()
+      leftChannelText = await newMeasurement.value.leftChannel[0].text();
     }
     if (newMeasurement.value.rightChannel.length > 0) {
-      rightChannelText = await newMeasurement.value.rightChannel[0].text()
+      rightChannelText = await newMeasurement.value.rightChannel[0].text();
     }
 
     const created = await measurementsServer.create({
@@ -166,81 +166,81 @@ const saveMeasurement = async () => {
       label: newMeasurement.value.label,
       left_channel: leftChannelText,
       right_channel: rightChannelText,
-    })
+    });
 
-    measurements.value.push(created)
-    toast.success('Measurement created successfully!')
+    measurements.value.push(created);
+    toast.success("Measurement created successfully!");
 
     newMeasurement.value = {
       ...initialMeasurementFormState,
       leftChannel: [],
       rightChannel: [],
-    }
-    closeAddMeasurementModal()
+    };
+    closeAddMeasurementModal();
   } catch (error) {
-    console.error(error)
-    toast.error('Failed to create measurement.')
+    console.error(error);
+    toast.error("Failed to create measurement.");
   } finally {
-    saving.value = false
+    saving.value = false;
   }
-}
+};
 
 const deleteMeasurement = async (id: string) => {
   try {
-    await measurementsServer.remove(id)
-    measurements.value = measurements.value.filter((m) => m.id !== id)
-    toast.success('Measurement deleted successfully!')
+    await measurementsServer.remove(id);
+    measurements.value = measurements.value.filter((m) => m.id !== id);
+    toast.success("Measurement deleted successfully!");
   } catch (error) {
-    console.error(error)
-    toast.error('Failed to delete measurement.')
+    console.error(error);
+    toast.error("Failed to delete measurement.");
   }
-}
+};
 
 const saveEvaluation = async () => {
-  saving.value = true
+  saving.value = true;
   try {
     if (existingEvaluation.value) {
       const updated = await evaluationsServer.update(existingEvaluation.value.id, {
         review_score: newEvaluation.value.reviewScore,
         review_url: newEvaluation.value.reviewUrl,
         shop_url: newEvaluation.value.shopUrl,
-      })
-      existingEvaluation.value = updated
-      toast.success('Evaluation updated successfully!')
+      });
+      existingEvaluation.value = updated;
+      toast.success("Evaluation updated successfully!");
     } else {
       const created = await evaluationsServer.create({
         model_id: modelId,
         review_score: newEvaluation.value.reviewScore,
         review_url: newEvaluation.value.reviewUrl,
         shop_url: newEvaluation.value.shopUrl,
-      })
-      existingEvaluation.value = created
-      toast.success('Evaluation created successfully!')
+      });
+      existingEvaluation.value = created;
+      toast.success("Evaluation created successfully!");
     }
   } catch (error: any) {
     if (error.response?.status === 409) {
-      toast.error('An evaluation already exists for this model.')
+      toast.error("An evaluation already exists for this model.");
     } else {
-      console.error(error)
-      toast.error('Failed to save evaluation.')
+      console.error(error);
+      toast.error("Failed to save evaluation.");
     }
   } finally {
-    saving.value = false
+    saving.value = false;
   }
-}
+};
 
 onMounted(async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    await Promise.all([fetchBrands(), fetchDatabases(), fetchModel()])
-    await fetchMeasurements()
+    await Promise.all([fetchBrands(), fetchDatabases(), fetchModel()]);
+    await fetchMeasurements();
   } catch (error) {
-    console.error(error)
-    fetchFailed.value = true
+    console.error(error);
+    fetchFailed.value = true;
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-})
+});
 </script>
 
 <template>
@@ -257,7 +257,7 @@ onMounted(async () => {
         Cancel
       </fwb-button>
       <fwb-button color="default" size="md" @click="saveEvaluation" :disabled="saving">
-        {{ saving ? 'Saving...' : 'Save' }}
+        {{ saving ? "Saving..." : "Save" }}
       </fwb-button>
     </template>
 
@@ -320,7 +320,7 @@ onMounted(async () => {
               <fwb-card class="p-4 !max-w-full">
                 <div class="flex justify-end mb-6">
                   <fwb-button color="default" size="sm" @click="saveEvaluation" :disabled="saving">
-                    {{ existingEvaluation ? 'Update evaluation' : 'Add evaluation' }}
+                    {{ existingEvaluation ? "Update evaluation" : "Add evaluation" }}
                     <template #suffix>
                       <Icon icon="flowbite:plus-outline" width="16" height="16" />
                     </template>
@@ -393,7 +393,7 @@ onMounted(async () => {
                 Cancel
               </fwb-button>
               <fwb-button color="default" size="md" @click="saveMeasurement" :disabled="saving">
-                {{ saving ? 'Saving...' : 'Save' }}
+                {{ saving ? "Saving..." : "Save" }}
               </fwb-button>
             </template>
           </Form>

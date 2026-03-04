@@ -1,76 +1,76 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { toast } from 'vue3-toastify'
-import { useRouter } from 'vue-router'
+import { onMounted, ref } from "vue";
+import { toast } from "vue3-toastify";
+import { useRouter } from "vue-router";
 
-import MainLayout from '@/layouts/MainLayout.vue'
-import Form from '@/components/Form.vue'
-import { brandsServer } from '@/utils/server/brands'
-import { modelsServer } from '@/utils/server/models'
-import type { ServerCreateModel } from '@/utils/server/models'
-import NetworkError from '@/components/NetworkError.vue'
+import MainLayout from "@/layouts/MainLayout.vue";
+import Form from "@/components/Form.vue";
+import { brandsServer } from "@/utils/server/brands";
+import { modelsServer } from "@/utils/server/models";
+import type { ServerCreateModel } from "@/utils/server/models";
+import NetworkError from "@/components/NetworkError.vue";
 
-const router = useRouter()
-const loading = ref(false)
-const fetchFailed = ref(false)
+const router = useRouter();
+const loading = ref(false);
+const fetchFailed = ref(false);
 
 const initialModelFormState: Model = {
-  name: '',
-  brandId: '',
+  name: "",
+  brandId: "",
   errors: [],
-}
+};
 
-const newModelForm = ref<Model>(initialModelFormState)
+const newModelForm = ref<Model>(initialModelFormState);
 
-const brands = ref([] as { name: string; value: string }[])
+const brands = ref([] as { name: string; value: string }[]);
 
 const fetchBrands = async () => {
   try {
-    loading.value = true
-    const response = await brandsServer.all(1, '')
-    brands.value.push(...response.page.map((brand) => ({ name: brand.name, value: brand.id })))
+    loading.value = true;
+    const response = await brandsServer.all(1, "");
+    brands.value.push(...response.page.map((brand) => ({ name: brand.name, value: brand.id })));
 
     if (response.page_count > 1) {
       for (let i = 2; i <= response.page_count; i++) {
-        const pageResponse = await brandsServer.all(i, '')
+        const pageResponse = await brandsServer.all(i, "");
         brands.value.push(
           ...pageResponse.page.map((brand) => ({ name: brand.name, value: brand.id })),
-        )
+        );
       }
     }
   } catch (error) {
-    console.error(error)
-    fetchFailed.value = true
+    console.error(error);
+    fetchFailed.value = true;
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const convertToServerModel = (form: Model): ServerCreateModel => ({
   name: form.name,
   brand_id: form.brandId,
-})
+});
 
 const createModel = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const serverModel: ServerCreateModel = convertToServerModel(newModelForm.value)
-    const createdModel = await modelsServer.create(serverModel)
-    toast.success('Model created successfully!')
+    const serverModel: ServerCreateModel = convertToServerModel(newModelForm.value);
+    const createdModel = await modelsServer.create(serverModel);
+    toast.success("Model created successfully!");
     router.push({
-      name: 'editModel',
+      name: "editModel",
       params: { id: createdModel.id },
-    })
+    });
   } catch (error) {
-    console.error(error)
+    console.error(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 onMounted(() => {
-  fetchBrands()
-})
+  fetchBrands();
+});
 </script>
 
 <template>
@@ -87,7 +87,7 @@ onMounted(() => {
         Cancel
       </fwb-button>
       <fwb-button color="default" size="md" @click="createModel" :disabled="loading">
-        {{ loading ? 'Saving...' : 'Save' }}
+        {{ loading ? "Saving..." : "Save" }}
       </fwb-button>
     </template>
 

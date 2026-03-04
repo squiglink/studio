@@ -1,48 +1,48 @@
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onBeforeMount, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
-import { authorizationServer } from '@/utils/server/authorization'
-import { useAuthorizationStore } from '@/stores/authorization'
+import { authorizationServer } from "@/utils/server/authorization";
+import { useAuthorizationStore } from "@/stores/authorization";
 
-import BlankLayout from '@/layouts/BlankLayout.vue'
-import Loader from '@/components/Loader.vue'
+import BlankLayout from "@/layouts/BlankLayout.vue";
+import Loader from "@/components/Loader.vue";
 
-const authorizationStore = useAuthorizationStore()
-const router = useRouter()
+const authorizationStore = useAuthorizationStore();
+const router = useRouter();
 
-const turnstileEnabled = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_ENABLED === 'true'
-const loginState = ref<'idle' | 'loading' | 'success' | 'error'>('idle')
+const turnstileEnabled = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_ENABLED === "true";
+const loginState = ref<"idle" | "loading" | "success" | "error">("idle");
 
 onBeforeMount(() => {
   if (authorizationStore.accessToken) {
-    router.push({ name: 'home' })
+    router.push({ name: "home" });
   }
-})
+});
 
-const email = ref('')
-const turnstileToken = ref('')
+const email = ref("");
+const turnstileToken = ref("");
 
 const login = async () => {
-  loginState.value = 'loading'
-  const result = await authorizationServer.login(email.value, turnstileToken.value)
+  loginState.value = "loading";
+  const result = await authorizationServer.login(email.value, turnstileToken.value);
   if (result) {
-    loginState.value = 'success'
+    loginState.value = "success";
   } else {
-    loginState.value = 'error'
+    loginState.value = "error";
   }
-}
+};
 
 onMounted(() => {
   if (turnstileEnabled) {
-    window.turnstile.render('#turnstile-container', {
+    window.turnstile.render("#turnstile-container", {
       sitekey: import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY,
       callback: function (token: string) {
-        turnstileToken.value = token
+        turnstileToken.value = token;
       },
-    })
+    });
   }
-})
+});
 </script>
 
 <template>

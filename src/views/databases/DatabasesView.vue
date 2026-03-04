@@ -1,51 +1,51 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { databasesServer } from '@/utils/server/databases'
+import { onMounted, ref, computed, watch } from "vue";
+import { useRoute } from "vue-router";
+import { databasesServer } from "@/utils/server/databases";
 
-import type { ServerDatabase, ServerDatabases } from '@/utils/server/databases'
+import type { ServerDatabase, ServerDatabases } from "@/utils/server/databases";
 
-import MainLayout from '@/layouts/MainLayout.vue'
-import Table from '@/components/Table.vue'
-import NetworkError from '@/components/NetworkError.vue'
+import MainLayout from "@/layouts/MainLayout.vue";
+import Table from "@/components/Table.vue";
+import NetworkError from "@/components/NetworkError.vue";
 
-const route = useRoute()
+const route = useRoute();
 
 const tableColumns = [
-  { name: 'Kind', key: 'kind', path: '/databases/' },
-  { name: 'Path', key: 'path' },
-  { name: 'Created', key: 'created_at' },
-  { name: 'Last modified', key: 'updated_at' },
-]
+  { name: "Kind", key: "kind", path: "/databases/" },
+  { name: "Path", key: "path" },
+  { name: "Created", key: "created_at" },
+  { name: "Last modified", key: "updated_at" },
+];
 
-const databases = ref([] as ServerDatabase[])
-const page = computed(() => (route.query.page ? Number(route.query.page) : 1))
-const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ''))
-const pageCount = ref(1)
-const loading = ref(false)
-const fetchFailed = ref(false)
+const databases = ref([] as ServerDatabase[]);
+const page = computed(() => (route.query.page ? Number(route.query.page) : 1));
+const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ""));
+const pageCount = ref(1);
+const loading = ref(false);
+const fetchFailed = ref(false);
 
 const fetchDatabases = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const response = await databasesServer.all(page.value, searchQuery.value)
-    databases.value = response.page
-    pageCount.value = response.page_count
+    const response = await databasesServer.all(page.value, searchQuery.value);
+    databases.value = response.page;
+    pageCount.value = response.page_count;
   } catch (error) {
-    fetchFailed.value = true
-    loading.value = false
+    fetchFailed.value = true;
+    loading.value = false;
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 watch([page, searchQuery], () => {
-  fetchDatabases()
-})
+  fetchDatabases();
+});
 
 onMounted(() => {
-  fetchDatabases()
-})
+  fetchDatabases();
+});
 </script>
 
 <template>

@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import TableActions from './table/Actions.vue'
-import TableSearch from './table/Search.vue'
-import TablePagination from './table/Pagination.vue'
-import Loader from './Loader.vue'
+import { ref } from "vue";
+import TableActions from "./table/Actions.vue";
+import TableSearch from "./table/Search.vue";
+import TablePagination from "./table/Pagination.vue";
+import Loader from "./Loader.vue";
 
 const props = defineProps<{
-  columns: TableColumn[]
-  selectableRows?: boolean
-  enableSearch?: boolean
-  pageCount: number
-}>()
+  columns: TableColumn[];
+  selectableRows?: boolean;
+  enableSearch?: boolean;
+  pageCount: number;
+}>();
 
-const tableRows = defineModel<object[]>()
-const currentPage = defineModel<number>('currentPage', { required: true })
-const loading = defineModel<boolean>('loading', { required: true })
-const selectedRows = ref([])
+const tableRows = defineModel<object[]>();
+const currentPage = defineModel<number>("currentPage", { required: true });
+const loading = defineModel<boolean>("loading", { required: true });
+const selectedRows = ref([]);
 </script>
 
 <template>
@@ -76,7 +76,7 @@ const selectedRows = ref([])
                 {{
                   new Date(item[column.key as keyof typeof item])
                     .toISOString()
-                    .replace('T', ' ')
+                    .replace("T", " ")
                     .substring(0, 16)
                 }}
               </div>

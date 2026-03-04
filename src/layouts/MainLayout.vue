@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import Sidebar from '@/components/Sidebar.vue'
-import { initFlowbite } from 'flowbite'
-import { onMounted } from 'vue'
+import Sidebar from "@/components/Sidebar.vue";
+import { initFlowbite } from "flowbite";
+import { onMounted } from "vue";
 
 onMounted(() => {
-  initFlowbite()
-})
+  initFlowbite();
+});
 </script>
 
 <template>

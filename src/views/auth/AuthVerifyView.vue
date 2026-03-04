@@ -1,44 +1,44 @@
 <script setup lang="ts">
-import { onBeforeMount, nextTick } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { onBeforeMount, nextTick } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-import { authorizationServer } from '@/utils/server/authorization'
-import { useAuthorizationStore } from '@/stores/authorization'
+import { authorizationServer } from "@/utils/server/authorization";
+import { useAuthorizationStore } from "@/stores/authorization";
 
-import BlankLayout from '@/layouts/BlankLayout.vue'
-import Loader from '@/components/Loader.vue'
+import BlankLayout from "@/layouts/BlankLayout.vue";
+import Loader from "@/components/Loader.vue";
 
-const authorizationStore = useAuthorizationStore()
-const route = useRoute()
-const router = useRouter()
+const authorizationStore = useAuthorizationStore();
+const route = useRoute();
+const router = useRouter();
 
 onBeforeMount(async () => {
   if (authorizationStore.accessToken) {
-    router.replace({ name: 'home' })
-    return
+    router.replace({ name: "home" });
+    return;
   }
 
-  console.log(`ROUTE QUERY: ${JSON.stringify(route.query)}`)
-  const token = route.query.token as string
+  console.log(`ROUTE QUERY: ${JSON.stringify(route.query)}`);
+  const token = route.query.token as string;
 
   if (!token) {
-    router.replace({ name: 'login' })
-    return
+    router.replace({ name: "login" });
+    return;
   }
 
-  const response = await authorizationServer.verify(token)
+  const response = await authorizationServer.verify(token);
   if (!response) {
-    router.replace({ name: 'login' })
-    return
+    router.replace({ name: "login" });
+    return;
   }
 
-  console.log(`response: ${JSON.stringify(response)}`)
+  console.log(`response: ${JSON.stringify(response)}`);
 
-  authorizationStore.setAccessToken(response.access_token)
-  authorizationStore.setRefreshToken(response.refresh_token)
+  authorizationStore.setAccessToken(response.access_token);
+  authorizationStore.setRefreshToken(response.refresh_token);
 
-  router.replace({ name: 'home' })
-})
+  router.replace({ name: "home" });
+});
 </script>
 
 <template>
