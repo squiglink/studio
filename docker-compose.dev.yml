@@ -7,5 +7,5 @@ services:
       - 5173:5173
     command: pnpm dev
     volumes:
+      - ./node_modules:/studio/node_modules
       - .:/studio
-      - /studio/node_modules
