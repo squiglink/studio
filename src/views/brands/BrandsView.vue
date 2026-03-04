@@ -31,9 +31,8 @@ const fetchBrands = async () => {
     const response = await brandsServer.all(page.value, searchQuery.value);
     brands.value = response.page;
     pageCount.value = response.page_count;
-  } catch (error) {
+  } catch {
     fetchFailed.value = true;
-    loading.value = false;
   } finally {
     loading.value = false;
   }

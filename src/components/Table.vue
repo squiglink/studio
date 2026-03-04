@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import TableActions from "./table/Actions.vue";
 import TableSearch from "./table/Search.vue";
 import TablePagination from "./table/Pagination.vue";
@@ -15,7 +14,6 @@ const props = defineProps<{
 const tableRows = defineModel<object[]>();
 const currentPage = defineModel<number>("currentPage", { required: true });
 const loading = defineModel<boolean>("loading", { required: true });
-const selectedRows = ref([]);
 </script>
 
 <template>
@@ -52,7 +50,6 @@ const selectedRows = ref([]);
           <fwb-table-row v-for="(item, index) in tableRows" :key="item['id' as keyof typeof item]">
             <fwb-table-cell v-if="selectableRows" class="w-4 p-4">
               <input
-                v-model="selectedRows"
                 type="checkbox"
                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded \ focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 \ dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 :value="item['id' as keyof typeof item]"

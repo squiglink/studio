@@ -31,9 +31,8 @@ const fetchModels = async () => {
     const response = await modelsServer.all(page.value, searchQuery.value);
     models.value = response.page;
     pageCount.value = response.page_count;
-  } catch (error) {
+  } catch {
     fetchFailed.value = true;
-    loading.value = false;
   } finally {
     loading.value = false;
   }
@@ -65,12 +64,6 @@ onMounted(() => {
         :page-count="pageCount"
       >
         <template #actions>
-          <!-- <fwb-button color="red" size="xs">
-            Delete selected
-            <template #suffix>
-              <Icon icon="flowbite:minus-outline" width="24" height="24" />
-            </template>
-          </fwb-button> -->
           <fwb-button color="default" size="md" tag="router-link" :href="{ name: 'newModel' }">
             Add new model
             <template #suffix>

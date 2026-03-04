@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, nextTick } from "vue";
+import { onBeforeMount } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { authorizationServer } from "@/utils/server/authorization";
@@ -18,7 +18,6 @@ onBeforeMount(async () => {
     return;
   }
 
-  console.log(`ROUTE QUERY: ${JSON.stringify(route.query)}`);
   const token = route.query.token as string;
 
   if (!token) {
@@ -31,8 +30,6 @@ onBeforeMount(async () => {
     router.replace({ name: "login" });
     return;
   }
-
-  console.log(`response: ${JSON.stringify(response)}`);
 
   authorizationStore.setAccessToken(response.access_token);
   authorizationStore.setRefreshToken(response.refresh_token);

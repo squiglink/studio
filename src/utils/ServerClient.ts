@@ -1,16 +1,7 @@
 import axios from "axios";
-// import { toast } from 'vue3-toastify'
 import { useAuthorizationStore } from "@/stores/authorization";
 
 import router from "@/router";
-
-export type ClientError = {
-  errors: string[];
-};
-
-export type ServerError = {
-  errors: string[];
-};
 
 export interface ServerPage<T> {
   page: T[];
@@ -21,20 +12,6 @@ export const serverClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_SERVER_URL,
   timeout: 5000,
 });
-
-// serverClient.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     toast(`${error.name}: ${error.message} (${error.code})`, {
-//       theme: 'dark',
-//       type: 'error',
-//       position: 'bottom-right',
-//       dangerouslyHTMLString: true,
-//     })
-
-//     throw error
-//   },
-// )
 
 serverClient.interceptors.request.use(
   (request) => {

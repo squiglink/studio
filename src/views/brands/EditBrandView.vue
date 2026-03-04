@@ -18,7 +18,6 @@ const initialBrandFormState: Brand = {
   errors: [],
 };
 
-const loading = ref(false);
 const fetchFailed = ref(false);
 const editBrandForm = ref<Brand>(initialBrandFormState);
 
@@ -27,7 +26,6 @@ const convertToServerBrand = (form: Brand): ServerBrandPayload => ({
 });
 
 const updateBrand = async () => {
-  loading.value = true;
   try {
     const serverBrand: ServerBrandPayload = convertToServerBrand(editBrandForm.value);
     await brandsServer.edit(route.params.id as string, serverBrand);
@@ -37,7 +35,6 @@ const updateBrand = async () => {
     router.push({ name: "brands" });
   } catch (error) {
     console.error(error);
-    loading.value = false;
   }
 };
 

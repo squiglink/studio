@@ -3,7 +3,7 @@ import { onMounted, ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { databasesServer } from "@/utils/server/databases";
 
-import type { ServerDatabase, ServerDatabases } from "@/utils/server/databases";
+import type { ServerDatabase } from "@/utils/server/databases";
 
 import MainLayout from "@/layouts/MainLayout.vue";
 import Table from "@/components/Table.vue";
@@ -31,9 +31,8 @@ const fetchDatabases = async () => {
     const response = await databasesServer.all(page.value, searchQuery.value);
     databases.value = response.page;
     pageCount.value = response.page_count;
-  } catch (error) {
+  } catch {
     fetchFailed.value = true;
-    loading.value = false;
   } finally {
     loading.value = false;
   }

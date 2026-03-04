@@ -8,16 +8,12 @@ interface AuthResponse {
 export const authorizationServer = {
   async login(email: string, cloudflareTurnstileToken: string): Promise<boolean> {
     try {
-      const response = await serverClient.post("/authorization/login", {
+      await serverClient.post("/authorization/login", {
         email,
         cloudflareTurnstileToken,
       });
 
-      if (response.status !== 200) {
-        throw new Error("Failed to send magic link");
-      } else {
-        return true;
-      }
+      return true;
     } catch {
       return false;
     }
@@ -25,13 +21,9 @@ export const authorizationServer = {
 
   async verify(token: string): Promise<AuthResponse> {
     const response = await serverClient.get<AuthResponse>("/authorization/verify", {
-      params: { token: token },
+      params: { token },
     });
 
-    if (response.status !== 200) {
-      throw new Error("Failed to verify magic link token");
-    } else {
-      return response.data;
-    }
+    return response.data;
   },
 };
