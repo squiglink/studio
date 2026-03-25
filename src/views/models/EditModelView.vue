@@ -25,6 +25,7 @@ const router = useRouter();
 const modelId = route.params.id as string;
 
 const addMeasurementModalShown = ref(false);
+const addEvaluationModalShown = ref(false);
 const loading = ref(false);
 const saving = ref(false);
 const fetchFailed = ref(false);
@@ -35,6 +36,21 @@ const openAddMeasurementModal = () => {
 
 const closeAddMeasurementModal = () => {
   addMeasurementModalShown.value = false;
+};
+
+const openAddEvaluationModal = () => {
+  if (existingEvaluation.value) {
+    newEvaluation.value.reviewScore = existingEvaluation.value.review_score;
+    newEvaluation.value.reviewUrl = existingEvaluation.value.review_url;
+    newEvaluation.value.shopUrl = existingEvaluation.value.shop_url;
+  } else {
+    newEvaluation.value = { ...initialEvaluationFormState };
+  }
+  addEvaluationModalShown.value = true;
+};
+
+const closeAddEvaluationModal = () => {
+  addEvaluationModalShown.value = false;
 };
 
 const initialModelFormState: Model = {
@@ -224,6 +240,7 @@ const saveEvaluation = async () => {
       });
       existingEvaluation.value = updated;
       toast.success("Evaluation updated successfully!");
+      closeAddEvaluationModal();
     } else {
       const created = await evaluationsServer.create({
         model_id: modelId,
@@ -233,6 +250,7 @@ const saveEvaluation = async () => {
       });
       existingEvaluation.value = created;
       toast.success("Evaluation created successfully!");
+      closeAddEvaluationModal();
     }
   } catch (error: any) {
     if (error.response?.status === 409) {
@@ -271,10 +289,7 @@ onMounted(async () => {
         :href="{ name: 'models' }"
         class="flex justify-center"
       >
-        Cancel
-      </fwb-button>
-      <fwb-button color="default" size="md" @click="saveEvaluation" :disabled="saving">
-        {{ saving ? "Saving..." : "Save" }}
+        Back
       </fwb-button>
     </template>
 
@@ -336,7 +351,7 @@ onMounted(async () => {
               </div>
               <fwb-card class="p-4 !max-w-full">
                 <div class="flex justify-end mb-6">
-                  <fwb-button color="default" size="sm" @click="saveEvaluation" :disabled="saving">
+                  <fwb-button color="default" size="sm" @click="openAddEvaluationModal">
                     {{ existingEvaluation ? "Update evaluation" : "Add evaluation" }}
                     <template #suffix>
                       <Icon icon="flowbite:plus-outline" width="16" height="16" />
@@ -351,21 +366,24 @@ onMounted(async () => {
                     placeholder="optional"
                     size="md"
                     type="number"
-                    v-model="newEvaluation.reviewScore"
+                    :model-value="existingEvaluation?.review_score"
+                    disabled
                   />
                   <fwb-input
                     label="Review URL"
                     name="reviewUrl"
                     placeholder="optional"
                     size="md"
-                    v-model="newEvaluation.reviewUrl"
+                    :model-value="existingEvaluation?.review_url"
+                    disabled
                   />
                   <fwb-input
                     label="Shop URL"
                     name="shopUrl"
                     placeholder="optional"
                     size="md"
-                    v-model="newEvaluation.shopUrl"
+                    :model-value="existingEvaluation?.shop_url"
+                    disabled
                   />
                 </div>
               </fwb-card>
@@ -410,6 +428,50 @@ onMounted(async () => {
                 Cancel
               </fwb-button>
               <fwb-button color="default" size="md" @click="saveMeasurement" :disabled="saving">
+                {{ saving ? "Saving..." : "Save" }}
+              </fwb-button>
+            </template>
+          </Form>
+        </template>
+      </SideModal>
+
+      <SideModal v-model="addEvaluationModalShown">
+        <template #header-text>
+          {{ existingEvaluation ? "Update evaluation" : "Add evaluation" }}
+        </template>
+
+        <template #content>
+          <Form v-model="newEvaluation.errors">
+            <template #content>
+              <fwb-input
+                label="Review score"
+                name="reviewScore"
+                placeholder="optional"
+                size="md"
+                type="number"
+                v-model="newEvaluation.reviewScore"
+              />
+              <fwb-input
+                label="Review link"
+                name="reviewUrl"
+                placeholder="optional"
+                size="md"
+                v-model="newEvaluation.reviewUrl"
+              />
+              <fwb-input
+                label="Shop URL"
+                name="shopUrl"
+                placeholder="optional"
+                size="md"
+                v-model="newEvaluation.shopUrl"
+              />
+            </template>
+
+            <template #footer>
+              <fwb-button color="alternative" size="md" @click="closeAddEvaluationModal">
+                Cancel
+              </fwb-button>
+              <fwb-button color="default" size="md" @click="saveEvaluation" :disabled="saving">
                 {{ saving ? "Saving..." : "Save" }}
               </fwb-button>
             </template>
