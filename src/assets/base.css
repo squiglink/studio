@@ -4,6 +4,8 @@
 @plugin "flowbite/plugin";
 @source "../../node_modules/flowbite-vue";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @keyframes left-slide-in {
   0% {
     transform: translateX(-100%);

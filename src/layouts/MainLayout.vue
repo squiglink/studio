@@ -9,7 +9,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="dark dark:text-white bg-gray-900">
+  <div class="dark:text-white bg-gray-900">
     <Sidebar />
 
     <div class="sm:ml-72 h-screen overflow-x-auto p-4 lg:p-6 flex flex-col gap-4">

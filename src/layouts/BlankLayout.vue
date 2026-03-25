@@ -8,7 +8,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="dark bg-gray-900 h-full w-full">
+  <div class="bg-gray-900 h-full w-full">
     <slot />
   </div>
 </template>
