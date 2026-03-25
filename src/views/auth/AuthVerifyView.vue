@@ -2,18 +2,18 @@
 import { onBeforeMount } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import { authorizationServer } from "@/utils/server/authorization";
-import { useAuthorizationStore } from "@/stores/authorization";
+import { authenticationServer } from "@/utils/server/authentication";
+import { useAuthenticationStore } from "@/stores/authentication";
 
 import BlankLayout from "@/layouts/BlankLayout.vue";
 import Loader from "@/components/Loader.vue";
 
-const authorizationStore = useAuthorizationStore();
+const authenticationStore = useAuthenticationStore();
 const route = useRoute();
 const router = useRouter();
 
 onBeforeMount(async () => {
-  if (authorizationStore.accessToken) {
+  if (authenticationStore.accessToken) {
     router.replace({ name: "home" });
     return;
   }
@@ -25,14 +25,15 @@ onBeforeMount(async () => {
     return;
   }
 
-  const response = await authorizationServer.verify(token);
+  const response = await authenticationServer.verify(token);
   if (!response) {
     router.replace({ name: "login" });
     return;
   }
 
-  authorizationStore.setAccessToken(response.access_token);
-  authorizationStore.setRefreshToken(response.refresh_token);
+  authenticationStore.setAccessToken(response.access_token);
+  authenticationStore.setRefreshToken(response.refresh_token);
+  authenticationStore.setUserId(response.user_id);
 
   router.replace({ name: "home" });
 });

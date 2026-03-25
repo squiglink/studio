@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { useAuthorizationStore } from "../stores/authorization";
+import { useAuthenticationStore } from "../stores/authentication";
 import { useRouter } from "vue-router";
 import logo from "@/assets/logo.svg";
 
-const authorizationStore = useAuthorizationStore();
+const authenticationStore = useAuthenticationStore();
 const router = useRouter();
 
 const logout = () => {
-  authorizationStore.clearTokens();
+  authenticationStore.clearTokens();
   router.push("/login");
 };
 </script>

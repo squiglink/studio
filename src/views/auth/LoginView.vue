@@ -2,20 +2,20 @@
 import { onBeforeMount, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { authorizationServer } from "@/utils/server/authorization";
-import { useAuthorizationStore } from "@/stores/authorization";
+import { authenticationServer } from "@/utils/server/authentication";
+import { useAuthenticationStore } from "@/stores/authentication";
 
 import BlankLayout from "@/layouts/BlankLayout.vue";
 import Loader from "@/components/Loader.vue";
 
-const authorizationStore = useAuthorizationStore();
+const authenticationStore = useAuthenticationStore();
 const router = useRouter();
 
 const turnstileEnabled = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_ENABLED === "true";
 const loginState = ref<"idle" | "loading" | "success" | "error">("idle");
 
 onBeforeMount(() => {
-  if (authorizationStore.accessToken) {
+  if (authenticationStore.accessToken) {
     router.push({ name: "home" });
   }
 });
@@ -25,7 +25,7 @@ const turnstileToken = ref("");
 
 const login = async () => {
   loginState.value = "loading";
-  const result = await authorizationServer.login(email.value, turnstileToken.value);
+  const result = await authenticationServer.login(email.value, turnstileToken.value);
   if (result) {
     loginState.value = "success";
   } else {
