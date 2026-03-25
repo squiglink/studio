@@ -15,7 +15,10 @@ import { measurementsServer } from "@/utils/server/measurements";
 import type { ServerMeasurement } from "@/utils/server/measurements";
 import { evaluationsServer } from "@/utils/server/evaluations";
 import type { ServerEvaluation } from "@/utils/server/evaluations";
+import { useAuthenticationStore } from "@/stores/authentication";
 import NetworkError from "@/components/NetworkError.vue";
+
+const authenticationStore = useAuthenticationStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -139,6 +142,20 @@ const fetchModel = async () => {
   fetchFailed.value = true;
 };
 
+const fetchEvaluation = async () => {
+  try {
+    const evaluation = await evaluationsServer.get(authenticationStore.userId, modelId);
+    existingEvaluation.value = evaluation;
+    newEvaluation.value.reviewScore = evaluation.review_score;
+    newEvaluation.value.reviewUrl = evaluation.review_url;
+    newEvaluation.value.shopUrl = evaluation.shop_url;
+  } catch (error: any) {
+    if (error.response?.status !== 404) {
+      throw error;
+    }
+  }
+};
+
 const fetchMeasurements = async () => {
   for (const db of databases.value) {
     const dbMeasurements = await measurementsServer.all(db.value, modelId);
@@ -233,7 +250,7 @@ onMounted(async () => {
   loading.value = true;
   try {
     await Promise.all([fetchBrands(), fetchDatabases(), fetchModel()]);
-    await fetchMeasurements();
+    await Promise.all([fetchMeasurements(), fetchEvaluation()]);
   } catch (error) {
     console.error(error);
     fetchFailed.value = true;

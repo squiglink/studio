@@ -25,6 +25,13 @@ export type ServerUpdateEvaluation = {
 };
 
 export const evaluationsServer = {
+  async get(userId: string, modelId: string) {
+    const response = await serverClient.get("/evaluations", {
+      params: { user_id: userId, model_id: modelId },
+    });
+    return response.data as ServerEvaluation;
+  },
+
   async create(evaluation: ServerCreateEvaluation) {
     const response = await serverClient.post("/evaluations", evaluation);
     return response.data as ServerEvaluation;
