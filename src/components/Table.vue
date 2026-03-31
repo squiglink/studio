@@ -64,11 +64,14 @@ const loading = defineModel<boolean>("loading", { required: true });
               :class="columnIndex === 0 ? 'w-1/2' : ''"
             >
               <fwb-a
-                v-if="columnIndex === 0"
+                v-if="columnIndex === 0 && column.path"
                 :href="`${column.path}${item['id' as keyof typeof item]}${column.pathSuffix || ''}`"
               >
                 {{ item[column.key as keyof typeof item] }}
               </fwb-a>
+              <div v-else-if="columnIndex === 0">
+                {{ item[column.key as keyof typeof item] }}
+              </div>
               <div v-else-if="column.key === 'created_at' || column.key === 'updated_at'">
                 {{
                   new Date(item[column.key as keyof typeof item])
