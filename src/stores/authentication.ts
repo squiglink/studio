@@ -25,7 +25,7 @@ export const useAuthenticationStore = defineStore("authentication", {
       this.userId = "";
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      localStorage.removeItem("user");
+      localStorage.removeItem("userId");
     },
   },
 });
