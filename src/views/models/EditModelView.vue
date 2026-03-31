@@ -83,7 +83,7 @@ const initialModelFormState: Model = {
 
 const initialMeasurementFormState: Measurement = {
   label: "",
-  type: "",
+  type: "frequency_response",
   databaseId: "",
   leftChannel: [],
   rightChannel: [],
