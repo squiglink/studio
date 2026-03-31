@@ -335,7 +335,7 @@ onMounted(async () => {
                 <div
                   v-for="measurement in measurements"
                   :key="measurement.id"
-                  class="flex justify-between items-center p-3 bg-gray-800 rounded-lg mb-2"
+                  class="flex justify-between items-center pb-3 bg-gray-800 rounded-lg mb-2"
                 >
                   <div>
                     <span class="text-sm font-medium text-white">{{ measurement.label }}</span>
