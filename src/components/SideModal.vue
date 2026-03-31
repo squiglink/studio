@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 
 const modalShown = defineModel<boolean>();
 
@@ -7,18 +7,22 @@ const closeModal = () => {
   modalShown.value = false;
 };
 
-onMounted(() => {
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeModal();
-    }
-  });
+const onClick = (mouseEvent: MouseEvent) => {
+  if (mouseEvent.target === document.querySelector("#modal-container")) closeModal();
+};
 
-  window.addEventListener("click", (e) => {
-    if (e.target === document.querySelector("#modal-container")) {
-      closeModal();
-    }
-  });
+const onKeydown = (keyboardEvent: KeyboardEvent) => {
+  if (keyboardEvent.key === "Escape") closeModal();
+};
+
+onMounted(() => {
+  window.addEventListener("click", onClick);
+  window.addEventListener("keydown", onKeydown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("click", onClick);
+  window.removeEventListener("keydown", onKeydown);
 });
 </script>
 
