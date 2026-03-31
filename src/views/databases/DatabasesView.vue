@@ -60,7 +60,6 @@ onMounted(() => {
         v-model:loading="loading"
         :enable-search="true"
         :columns="tableColumns"
-        :data="databases"
         :page-count="pageCount"
       />
     </template>

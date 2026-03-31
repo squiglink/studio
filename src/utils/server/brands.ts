@@ -21,9 +21,4 @@ export const brandsServer = {
     const response = await serverClient.post("/brands", brand);
     return response.data as ServerBrand;
   },
-
-  async edit(id: string, brand: ServerBrandPayload) {
-    const response = await serverClient.patch(`/brands/${id}`, brand);
-    return response.data as ServerBrand;
-  },
 };
