@@ -24,6 +24,11 @@ export const modelsServer = {
     return response.data as ServerModels;
   },
 
+  async get(id: string) {
+    const response = await serverClient.get(`/models/${id}`);
+    return response.data as ServerModel;
+  },
+
   async create(model: ServerCreateModel) {
     const response = await serverClient.post("/models", model);
     return response.data as ServerModel;

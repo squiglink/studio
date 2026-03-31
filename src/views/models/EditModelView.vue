@@ -137,25 +137,9 @@ const fetchDatabases = async () => {
 };
 
 const fetchModel = async () => {
-  const firstResponse = await modelsServer.all(1, "");
-  const found = firstResponse.page.find((m) => m.id === modelId);
-  if (found) {
-    editModelForm.value.name = found.name;
-    editModelForm.value.brandId = found.brand.id;
-    return;
-  }
-
-  for (let i = 2; i <= firstResponse.page_count; i++) {
-    const pageResponse = await modelsServer.all(i, "");
-    const found = pageResponse.page.find((m) => m.id === modelId);
-    if (found) {
-      editModelForm.value.name = found.name;
-      editModelForm.value.brandId = found.brand.id;
-      return;
-    }
-  }
-
-  fetchFailed.value = true;
+  const model = await modelsServer.get(modelId);
+  editModelForm.value.name = model.name;
+  editModelForm.value.brandId = model.brand.id;
 };
 
 const fetchEvaluation = async () => {
