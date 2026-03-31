@@ -3,7 +3,7 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: Dockerfile
+      target: production
       args:
         VITE_BASE_SERVER_URL: ${VITE_BASE_SERVER_URL}
         VITE_CLOUDFLARE_TURNSTILE_ENABLED: ${VITE_CLOUDFLARE_TURNSTILE_ENABLED}
