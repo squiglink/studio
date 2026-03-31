@@ -19,9 +19,7 @@ export const serverClient = axios.create({
 serverClient.interceptors.request.use(
   (request) => {
     const publicEndpoints = ["/authentication/login", "/authentication/verify"];
-    const isPublicEndpoint = publicEndpoints.some((ep) =>
-      request.url?.includes(ep),
-    );
+    const isPublicEndpoint = publicEndpoints.some((ep) => request.url?.includes(ep));
 
     if (isPublicEndpoint) {
       return request;
@@ -30,8 +28,7 @@ serverClient.interceptors.request.use(
     const authenticationStore = useAuthenticationStore();
 
     if (authenticationStore.accessToken) {
-      request.headers["Authorization"] =
-        `Bearer ${authenticationStore.accessToken}`;
+      request.headers["Authorization"] = `Bearer ${authenticationStore.accessToken}`;
     } else {
       router.push({ name: "login" });
       return Promise.reject(new Error("Unauthorized"));
