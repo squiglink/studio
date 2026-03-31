@@ -26,16 +26,38 @@ const modelId = route.params.id as string;
 
 const addMeasurementModalShown = ref(false);
 const addEvaluationModalShown = ref(false);
+const editingMeasurementId = ref<string | null>(null);
 const loading = ref(false);
 const saving = ref(false);
 const fetchFailed = ref(false);
 
 const openAddMeasurementModal = () => {
+  editingMeasurementId.value = null;
+  newMeasurement.value = { ...initialMeasurementFormState, leftChannel: [], rightChannel: [] };
+  addMeasurementModalShown.value = true;
+};
+
+const openEditMeasurementModal = async (measurementId: string) => {
+  const measurement = await measurementsServer.get(measurementId);
+  editingMeasurementId.value = measurementId;
+  newMeasurement.value = {
+    label: measurement.label,
+    type: measurement.kind,
+    databaseId: measurement.database_id,
+    leftChannel: measurement.left_channel
+      ? [new File([measurement.left_channel], "left_channel.csv")]
+      : [],
+    rightChannel: measurement.right_channel
+      ? [new File([measurement.right_channel], "right_channel.csv")]
+      : [],
+    errors: [],
+  };
   addMeasurementModalShown.value = true;
 };
 
 const closeAddMeasurementModal = () => {
   addMeasurementModalShown.value = false;
+  editingMeasurementId.value = null;
 };
 
 const openAddEvaluationModal = () => {
@@ -176,27 +198,34 @@ const saveMeasurement = async () => {
       rightChannelText = await newMeasurement.value.rightChannel[0].text();
     }
 
-    const created = await measurementsServer.create({
-      model_id: modelId,
-      database_id: newMeasurement.value.databaseId,
-      kind: newMeasurement.value.type,
-      label: newMeasurement.value.label,
-      left_channel: leftChannelText,
-      right_channel: rightChannelText,
-    });
+    if (editingMeasurementId.value) {
+      const updated = await measurementsServer.update(editingMeasurementId.value, {
+        database_id: newMeasurement.value.databaseId,
+        kind: newMeasurement.value.type,
+        label: newMeasurement.value.label,
+        left_channel: leftChannelText,
+        right_channel: rightChannelText,
+      });
+      const index = measurements.value.findIndex((measurement) => measurement.id === updated.id);
+      if (index !== -1) measurements.value[index] = updated;
+      toast.success("Measurement updated successfully!");
+    } else {
+      const created = await measurementsServer.create({
+        model_id: modelId,
+        database_id: newMeasurement.value.databaseId,
+        kind: newMeasurement.value.type,
+        label: newMeasurement.value.label,
+        left_channel: leftChannelText,
+        right_channel: rightChannelText,
+      });
+      measurements.value.push(created);
+      toast.success("Measurement created successfully!");
+    }
 
-    measurements.value.push(created);
-    toast.success("Measurement created successfully!");
-
-    newMeasurement.value = {
-      ...initialMeasurementFormState,
-      leftChannel: [],
-      rightChannel: [],
-    };
     closeAddMeasurementModal();
   } catch (error) {
     console.error(error);
-    toast.error("Failed to create measurement.");
+    toast.error("Failed to save measurement.");
   } finally {
     saving.value = false;
   }
@@ -314,9 +343,18 @@ onMounted(async () => {
                       ({{ measurementTypeLabel(measurement.kind) }})
                     </span>
                   </div>
-                  <fwb-button color="red" size="xs" @click="deleteMeasurement(measurement.id)">
-                    Delete
-                  </fwb-button>
+                  <div class="flex gap-2">
+                    <fwb-button
+                      color="default"
+                      size="xs"
+                      @click="openEditMeasurementModal(measurement.id)"
+                    >
+                      Edit
+                    </fwb-button>
+                    <fwb-button color="red" size="xs" @click="deleteMeasurement(measurement.id)">
+                      Delete
+                    </fwb-button>
+                  </div>
                 </div>
                 <div class="flex justify-end" :class="{ 'mt-2': measurements.length > 0 }">
                   <fwb-button color="default" size="sm" @click="openAddMeasurementModal">
@@ -377,7 +415,9 @@ onMounted(async () => {
       </div>
 
       <SideModal v-model="addMeasurementModalShown">
-        <template #header-text>Add new measurement</template>
+        <template #header-text>{{
+          editingMeasurementId ? "Edit measurement" : "Add new measurement"
+        }}</template>
 
         <template #content>
           <Form v-model="newMeasurement.errors">

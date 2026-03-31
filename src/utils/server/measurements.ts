@@ -41,6 +41,11 @@ export const measurementsServer = {
     return response.data as ServerMeasurement[];
   },
 
+  async get(id: string) {
+    const response = await serverClient.get(`/measurements/${id}`);
+    return response.data as ServerMeasurementDetail;
+  },
+
   async create(measurement: ServerCreateMeasurement) {
     const response = await serverClient.post("/measurements", measurement);
     return response.data as ServerMeasurementDetail;
