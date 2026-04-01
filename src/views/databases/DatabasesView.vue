@@ -17,7 +17,7 @@ const pageCount = ref(1);
 const route = useRoute();
 const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ""));
 const tableColumns = [
-  { name: "Kind", key: "kind", path: "/databases/" },
+  { name: "Kind", key: "kind" },
   { name: "Path", key: "path" },
   { name: "Created", key: "created_at" },
   { name: "Last modified", key: "updated_at" },
