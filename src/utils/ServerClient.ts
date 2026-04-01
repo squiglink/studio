@@ -64,7 +64,7 @@ serverClient.interceptors.response.use(
         return serverClient(originalRequest);
       } catch (refreshError) {
         console.error("Token refresh failed");
-        authenticationStore.clearTokens();
+        authenticationStore.clear();
         router.push({ name: "login" });
         return Promise.reject(refreshError);
       }

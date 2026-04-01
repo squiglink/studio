@@ -19,7 +19,7 @@ export const useAuthenticationStore = defineStore("authentication", {
       this.userId = userId;
       localStorage.setItem("userId", userId);
     },
-    clearTokens() {
+    clear() {
       this.accessToken = "";
       this.refreshToken = "";
       this.userId = "";

@@ -1,13 +1,23 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { useAuthenticationStore } from "../stores/authentication";
+import { useUserStore } from "../stores/user";
 import { useRouter } from "vue-router";
 import logo from "@/assets/logo.svg";
 
 const authenticationStore = useAuthenticationStore();
 const router = useRouter();
+const userStore = useUserStore();
+
+const labLink = computed(() => {
+  const base = import.meta.env.VITE_BASE_LAB_URL as string;
+  const url = new URL(base);
+  return `${url.protocol}//${userStore.username}.${url.host}`;
+});
 
 const logout = () => {
-  authenticationStore.clearTokens();
+  authenticationStore.clear();
+  userStore.clear();
   router.push("/login");
 };
 </script>
@@ -61,7 +71,7 @@ const logout = () => {
     </fwb-sidebar-item>
 
     <fwb-sidebar-item-group border>
-      <fwb-sidebar-item class="py-1" link="/" tag="a" target="_blank">
+      <fwb-sidebar-item class="py-1" :link="labLink" tag="a" target="_blank">
         <template #icon>
           <Icon
             icon="flowbite:arrow-up-right-from-square-outline"

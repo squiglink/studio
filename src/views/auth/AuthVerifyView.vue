@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import { authenticationServer } from "@/utils/server/authentication";
 import { useAuthenticationStore } from "@/stores/authentication";
+import { useUserStore } from "@/stores/user";
 
 import BlankLayout from "@/layouts/BlankLayout.vue";
 import Loader from "@/components/Loader.vue";
@@ -11,6 +12,7 @@ import Loader from "@/components/Loader.vue";
 const authenticationStore = useAuthenticationStore();
 const route = useRoute();
 const router = useRouter();
+const userStore = useUserStore();
 
 onBeforeMount(async () => {
   if (authenticationStore.accessToken) {
@@ -34,6 +36,8 @@ onBeforeMount(async () => {
   authenticationStore.setAccessToken(response.access_token);
   authenticationStore.setRefreshToken(response.refresh_token);
   authenticationStore.setUserId(response.user_id);
+
+  await userStore.fetch();
 
   router.replace({ name: "home" });
 });
