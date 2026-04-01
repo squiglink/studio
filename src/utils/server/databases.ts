@@ -10,8 +10,14 @@ export type ServerDatabase = {
 export type ServerDatabases = ServerPage<ServerDatabase>;
 
 export const databasesServer = {
-  async all(page: number, query: string) {
-    const response = await serverClient.get("/databases", { params: { page: page, query: query } });
+  async all(page: number, query: string, userId: string) {
+    const response = await serverClient.get("/databases", {
+      params: {
+        page: page,
+        query: query,
+        user_id: userId,
+      },
+    });
     return response.data as ServerDatabases;
   },
 };

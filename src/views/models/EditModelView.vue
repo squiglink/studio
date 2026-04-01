@@ -137,7 +137,7 @@ const fetchBrands = async () => {
 };
 
 const fetchDatabases = async () => {
-  const response = await databasesServer.all(1, "");
+  const response = await databasesServer.all(1, "", authenticationStore.userId);
   databases.value.push(
     ...response.page.map((database) => ({
       name: `${database.kind} (${database.path})`,
@@ -147,7 +147,7 @@ const fetchDatabases = async () => {
 
   if (response.page_count > 1) {
     for (let i = 2; i <= response.page_count; i++) {
-      const pageResponse = await databasesServer.all(i, "");
+      const pageResponse = await databasesServer.all(i, "", authenticationStore.userId);
       databases.value.push(
         ...pageResponse.page.map((database) => ({
           name: `${database.kind} (${database.path})`,
