@@ -24,7 +24,6 @@ export const authenticationServer = {
     const response = await serverClient.get<AuthResponse>("/authentication/verify", {
       params: { token },
     });
-
     return response.data;
   },
 };

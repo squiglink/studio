@@ -29,11 +29,13 @@ const createBrand = async () => {
     const serverBrand: ServerBrandPayload = convertToServerBrand(newBrandForm.value);
     await brandsServer.create(serverBrand);
 
-    toast.success("Brand created successfully!");
+    toast.success("Successfully created the brand.");
 
     router.push({ name: "brands" });
   } catch (error) {
     console.error(error);
+    toast.error("Failed to create the brand.");
+
     loading.value = false;
   }
 };

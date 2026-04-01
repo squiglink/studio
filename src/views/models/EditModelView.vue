@@ -80,12 +80,6 @@ const closeAddEvaluationModal = () => {
   addEvaluationModalShown.value = false;
 };
 
-const initialModelFormState: Model = {
-  name: "",
-  brandId: "",
-  errors: [],
-};
-
 const initialMeasurementFormState: Measurement = {
   label: "",
   type: "frequency_response",
@@ -102,12 +96,8 @@ const initialEvaluationFormState: Evaluation = {
   errors: [],
 };
 
-const editModelForm = ref<Model>({ ...initialModelFormState });
-const newMeasurement = ref<Measurement>({
-  ...initialMeasurementFormState,
-  leftChannel: [],
-  rightChannel: [],
-});
+const editModelForm = ref<Model>({ name: "", brandId: "", errors: [] });
+const newMeasurement = ref<Measurement>({ ...initialMeasurementFormState });
 const newEvaluation = ref<Evaluation>({ ...initialEvaluationFormState });
 
 const measurements = ref<ServerMeasurement[]>([]);
@@ -213,7 +203,8 @@ const saveMeasurement = async () => {
       });
       const index = measurements.value.findIndex((measurement) => measurement.id === updated.id);
       if (index !== -1) measurements.value[index] = updated;
-      toast.success("Measurement updated successfully!");
+
+      toast.success("Successfully updated the measurement.");
     } else {
       const created = await measurementsServer.create({
         model_id: modelId,
@@ -224,13 +215,14 @@ const saveMeasurement = async () => {
         right_channel: rightChannelText,
       });
       measurements.value.push(created);
-      toast.success("Measurement created successfully!");
+
+      toast.success("Successfully created the measurement.");
     }
 
     closeAddMeasurementModal();
   } catch (error) {
     console.error(error);
-    toast.error("Failed to save measurement.");
+    toast.error("Failed to save the measurement.");
   } finally {
     saving.value = false;
   }
@@ -240,10 +232,10 @@ const deleteMeasurement = async (id: string) => {
   try {
     await measurementsServer.remove(id);
     measurements.value = measurements.value.filter((m) => m.id !== id);
-    toast.success("Measurement deleted successfully!");
+    toast.success("Successfully deleted the measurement.");
   } catch (error) {
     console.error(error);
-    toast.error("Failed to delete measurement.");
+    toast.error("Failed to delete the measurement.");
   }
 };
 
@@ -257,7 +249,7 @@ const saveEvaluation = async () => {
         shop_url: newEvaluation.value.shopUrl,
       });
       existingEvaluation.value = updated;
-      toast.success("Evaluation updated successfully!");
+      toast.success("Successfully updated the evaluation.");
       closeAddEvaluationModal();
     } else {
       const created = await evaluationsServer.create({
@@ -267,7 +259,7 @@ const saveEvaluation = async () => {
         shop_url: newEvaluation.value.shopUrl,
       });
       existingEvaluation.value = created;
-      toast.success("Evaluation created successfully!");
+      toast.success("Successfully created the evaluation.");
       closeAddEvaluationModal();
     }
   } catch (error: any) {
@@ -275,7 +267,7 @@ const saveEvaluation = async () => {
       toast.error("An evaluation already exists for this model.");
     } else {
       console.error(error);
-      toast.error("Failed to save evaluation.");
+      toast.error("Failed to save the evaluation.");
     }
   } finally {
     saving.value = false;

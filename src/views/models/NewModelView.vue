@@ -56,13 +56,16 @@ const createModel = async () => {
   try {
     const serverModel: ServerCreateModel = convertToServerModel(newModelForm.value);
     const createdModel = await modelsServer.create(serverModel);
-    toast.success("Model created successfully!");
+
+    toast.success("Successfully created the model.");
+
     router.push({
       name: "editModel",
       params: { id: createdModel.id },
     });
   } catch (error) {
     console.error(error);
+    toast.error("Failed to create the model.");
   } finally {
     loading.value = false;
   }

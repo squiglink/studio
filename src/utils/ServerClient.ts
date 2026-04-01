@@ -63,7 +63,7 @@ serverClient.interceptors.response.use(
         authenticationStore.setUserId(response.data.user_id);
         return serverClient(originalRequest);
       } catch (refreshError) {
-        console.error("Token refresh failed");
+        console.error("Failed to refresh the tokens.");
         authenticationStore.clear();
         router.push({ name: "login" });
         return Promise.reject(refreshError);

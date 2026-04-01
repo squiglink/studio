@@ -1,5 +1,5 @@
-import { serverClient } from "../ServerClient";
 import type { ServerPage } from "../ServerClient";
+import { serverClient } from "../ServerClient";
 
 export type ServerDatabase = {
   id: string;
@@ -11,13 +11,9 @@ export type ServerDatabases = ServerPage<ServerDatabase>;
 
 export const databasesServer = {
   async all(page: number, query: string, userId: string) {
-    const response = await serverClient.get("/databases", {
-      params: {
-        page: page,
-        query: query,
-        user_id: userId,
-      },
+    const response = await serverClient.get<ServerDatabases>("/databases", {
+      params: { page, query, user_id: userId },
     });
-    return response.data as ServerDatabases;
+    return response.data;
   },
 };

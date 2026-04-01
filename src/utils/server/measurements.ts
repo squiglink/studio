@@ -1,12 +1,21 @@
 import { serverClient } from "../ServerClient";
 
+export type ServerCreateMeasurement = {
+  database_id: string;
+  kind: string;
+  label: string;
+  left_channel?: string;
+  model_id: string;
+  right_channel?: string;
+};
+
 export type ServerMeasurement = {
+  created_at: string;
+  database_id: string;
   id: string;
   kind: string;
   label: string;
-  database_id: string;
   model_id: string;
-  created_at: string;
   updated_at: string;
 };
 
@@ -15,48 +24,42 @@ export type ServerMeasurementDetail = ServerMeasurement & {
   right_channel: string | null;
 };
 
-export type ServerCreateMeasurement = {
-  database_id: string;
-  kind: string;
-  label: string;
-  left_channel?: string;
-  right_channel?: string;
-  model_id: string;
-};
-
 export type ServerUpdateMeasurement = {
   database_id?: string;
   kind?: string;
   label?: string;
   left_channel?: string;
-  right_channel?: string;
   model_id?: string;
+  right_channel?: string;
 };
 
 export const measurementsServer = {
   async all(databaseId: string, modelId: string) {
-    const response = await serverClient.get("/measurements", {
+    const response = await serverClient.get<ServerMeasurement[]>("/measurements", {
       params: { database_id: databaseId, model_id: modelId },
     });
-    return response.data as ServerMeasurement[];
-  },
-
-  async get(id: string) {
-    const response = await serverClient.get(`/measurements/${id}`);
-    return response.data as ServerMeasurementDetail;
+    return response.data;
   },
 
   async create(measurement: ServerCreateMeasurement) {
-    const response = await serverClient.post("/measurements", measurement);
-    return response.data as ServerMeasurementDetail;
+    const response = await serverClient.post<ServerMeasurementDetail>("/measurements", measurement);
+    return response.data;
   },
 
-  async update(id: string, measurement: ServerUpdateMeasurement) {
-    const response = await serverClient.patch(`/measurements/${id}`, measurement);
-    return response.data as ServerMeasurementDetail;
+  async get(id: string) {
+    const response = await serverClient.get<ServerMeasurementDetail>(`/measurements/${id}`);
+    return response.data;
   },
 
   async remove(id: string) {
     await serverClient.delete(`/measurements/${id}`);
+  },
+
+  async update(id: string, measurement: ServerUpdateMeasurement) {
+    const response = await serverClient.patch<ServerMeasurementDetail>(
+      `/measurements/${id}`,
+      measurement,
+    );
+    return response.data;
   },
 };

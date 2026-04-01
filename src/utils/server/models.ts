@@ -1,36 +1,34 @@
-import { serverClient } from "../ServerClient";
-import type { ServerPage } from "../ServerClient";
 import type { ServerBrand } from "./brands";
+import type { ServerPage } from "../ServerClient";
+import { serverClient } from "../ServerClient";
 
 export type ServerModel = {
+  brand: ServerBrand;
   id: string;
   name: string;
   shop_url: string;
-  brand: ServerBrand;
 };
 
 export type ServerCreateModel = {
-  name: string;
   brand_id: string;
+  name: string;
 };
 
 export type ServerModels = ServerPage<ServerModel>;
 
 export const modelsServer = {
   async all(page: number, query: string) {
-    const response = await serverClient.get("/models", {
-      params: { page: page, query: query },
-    });
-    return response.data as ServerModels;
-  },
-
-  async get(id: string) {
-    const response = await serverClient.get(`/models/${id}`);
-    return response.data as ServerModel;
+    const response = await serverClient.get<ServerModels>("/models", { params: { page, query } });
+    return response.data;
   },
 
   async create(model: ServerCreateModel) {
-    const response = await serverClient.post("/models", model);
-    return response.data as ServerModel;
+    const response = await serverClient.post<ServerModel>("/models", model);
+    return response.data;
+  },
+
+  async get(id: string) {
+    const response = await serverClient.get<ServerModel>(`/models/${id}`);
+    return response.data;
   },
 };
