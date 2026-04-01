@@ -56,7 +56,7 @@ const createBrand = async () => {
     </template>
 
     <template #content>
-      <Form v-model="newBrandForm.errors" class="w-1/4">
+      <Form v-model="newBrandForm.errors" class="w-1/4" @submit="createBrand">
         <template #content>
           <fwb-input
             label="Name"

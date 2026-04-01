@@ -309,109 +309,107 @@ onMounted(async () => {
     <template #content>
       <NetworkError v-if="fetchFailed" />
       <div v-else class="w-full max-w-2xl">
-        <Form v-model="editModelForm.errors">
-          <template #content>
-            <fwb-select
-              v-model="editModelForm.brandId"
-              :options="brands"
-              label="Brand"
-              placeholder="required"
-              disabled
-            />
-            <fwb-input
-              label="Model name"
-              name="name"
-              placeholder="required"
-              size="md"
-              v-model="editModelForm.name"
-              disabled
-            />
+        <div class="flex flex-col gap-4">
+          <fwb-select
+            v-model="editModelForm.brandId"
+            :options="brands"
+            label="Brand"
+            placeholder="required"
+            disabled
+          />
+          <fwb-input
+            label="Model name"
+            name="name"
+            placeholder="required"
+            size="md"
+            v-model="editModelForm.name"
+            disabled
+          />
+        </div>
 
-            <div>
-              <div class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Measurements
+        <div>
+          <div class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Measurements
+          </div>
+          <fwb-card class="p-4 !max-w-full">
+            <div
+              v-for="measurement in measurements"
+              :key="measurement.id"
+              class="flex justify-between items-center pb-3 bg-gray-800 rounded-lg mb-2"
+            >
+              <div>
+                <span class="text-sm font-medium text-white">{{ measurement.label }}</span>
+                <span class="text-xs text-gray-400 ml-2">
+                  ({{ measurementTypeLabel(measurement.kind) }})
+                </span>
               </div>
-              <fwb-card class="p-4 !max-w-full">
-                <div
-                  v-for="measurement in measurements"
-                  :key="measurement.id"
-                  class="flex justify-between items-center pb-3 bg-gray-800 rounded-lg mb-2"
+              <div class="flex gap-2">
+                <fwb-button
+                  color="default"
+                  size="xs"
+                  @click="openEditMeasurementModal(measurement.id)"
                 >
-                  <div>
-                    <span class="text-sm font-medium text-white">{{ measurement.label }}</span>
-                    <span class="text-xs text-gray-400 ml-2">
-                      ({{ measurementTypeLabel(measurement.kind) }})
-                    </span>
-                  </div>
-                  <div class="flex gap-2">
-                    <fwb-button
-                      color="default"
-                      size="xs"
-                      @click="openEditMeasurementModal(measurement.id)"
-                    >
-                      Edit
-                    </fwb-button>
-                    <fwb-button color="red" size="xs" @click="deleteMeasurement(measurement.id)">
-                      Delete
-                    </fwb-button>
-                  </div>
-                </div>
-                <div class="flex justify-end" :class="{ 'mt-2': measurements.length > 0 }">
-                  <fwb-button color="default" size="sm" @click="openAddMeasurementModal">
-                    Add new measurement
-                    <template #suffix>
-                      <Icon icon="flowbite:plus-outline" width="16" height="16" />
-                    </template>
-                  </fwb-button>
-                </div>
-              </fwb-card>
-            </div>
-
-            <div>
-              <div class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Evaluation
+                  Edit
+                </fwb-button>
+                <fwb-button color="red" size="xs" @click="deleteMeasurement(measurement.id)">
+                  Delete
+                </fwb-button>
               </div>
-              <fwb-card class="p-4 !max-w-full">
-                <div class="flex justify-end mb-6">
-                  <fwb-button color="default" size="sm" @click="openAddEvaluationModal">
-                    {{ existingEvaluation ? "Update evaluation" : "Add evaluation" }}
-                    <template #suffix>
-                      <Icon icon="flowbite:plus-outline" width="16" height="16" />
-                    </template>
-                  </fwb-button>
-                </div>
-
-                <div class="space-y-6">
-                  <fwb-input
-                    label="Review score"
-                    name="reviewScore"
-                    placeholder="optional"
-                    size="md"
-                    type="number"
-                    :model-value="existingEvaluation?.review_score"
-                    disabled
-                  />
-                  <fwb-input
-                    label="Review URL"
-                    name="reviewUrl"
-                    placeholder="optional"
-                    size="md"
-                    :model-value="existingEvaluation?.review_url"
-                    disabled
-                  />
-                  <fwb-input
-                    label="Shop URL"
-                    name="shopUrl"
-                    placeholder="optional"
-                    size="md"
-                    :model-value="existingEvaluation?.shop_url"
-                    disabled
-                  />
-                </div>
-              </fwb-card>
             </div>
-          </template>
-        </Form>
+            <div class="flex justify-end" :class="{ 'mt-2': measurements.length > 0 }">
+              <fwb-button color="default" size="sm" @click="openAddMeasurementModal">
+                Add new measurement
+                <template #suffix>
+                  <Icon icon="flowbite:plus-outline" width="16" height="16" />
+                </template>
+              </fwb-button>
+            </div>
+          </fwb-card>
+        </div>
+
+        <div>
+          <div class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Evaluation
+          </div>
+          <fwb-card class="p-4 !max-w-full">
+            <div class="flex justify-end mb-6">
+              <fwb-button color="default" size="sm" @click="openAddEvaluationModal">
+                {{ existingEvaluation ? "Update evaluation" : "Add evaluation" }}
+                <template #suffix>
+                  <Icon icon="flowbite:plus-outline" width="16" height="16" />
+                </template>
+              </fwb-button>
+            </div>
+
+            <div class="space-y-6">
+              <fwb-input
+                label="Review score"
+                name="reviewScore"
+                placeholder="optional"
+                size="md"
+                type="number"
+                :model-value="existingEvaluation?.review_score"
+                disabled
+              />
+              <fwb-input
+                label="Review URL"
+                name="reviewUrl"
+                placeholder="optional"
+                size="md"
+                :model-value="existingEvaluation?.review_url"
+                disabled
+              />
+              <fwb-input
+                label="Shop URL"
+                name="shopUrl"
+                placeholder="optional"
+                size="md"
+                :model-value="existingEvaluation?.shop_url"
+                disabled
+              />
+            </div>
+          </fwb-card>
+        </div>
       </div>
 
       <SideModal v-model="addMeasurementModalShown">
@@ -420,7 +418,7 @@ onMounted(async () => {
         }}</template>
 
         <template #content>
-          <Form v-model="newMeasurement.errors">
+          <Form v-model="newMeasurement.errors" @submit="saveMeasurement">
             <template #content>
               <fwb-input
                 label="Label"
@@ -451,7 +449,7 @@ onMounted(async () => {
               <fwb-button color="alternative" size="md" @click="closeAddMeasurementModal">
                 Cancel
               </fwb-button>
-              <fwb-button color="default" size="md" @click="saveMeasurement" :disabled="saving">
+              <fwb-button color="default" size="md" :disabled="saving">
                 {{ saving ? "Saving..." : "Save" }}
               </fwb-button>
             </template>
@@ -465,7 +463,7 @@ onMounted(async () => {
         </template>
 
         <template #content>
-          <Form v-model="newEvaluation.errors">
+          <Form v-model="newEvaluation.errors" @submit="saveEvaluation">
             <template #content>
               <fwb-input
                 label="Review score"
@@ -495,7 +493,7 @@ onMounted(async () => {
               <fwb-button color="alternative" size="md" @click="closeAddEvaluationModal">
                 Cancel
               </fwb-button>
-              <fwb-button color="default" size="md" @click="saveEvaluation" :disabled="saving">
+              <fwb-button color="default" size="md" :disabled="saving">
                 {{ saving ? "Saving..." : "Save" }}
               </fwb-button>
             </template>

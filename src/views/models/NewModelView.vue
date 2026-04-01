@@ -94,7 +94,7 @@ onMounted(() => {
     <template #content>
       <NetworkError v-if="fetchFailed" />
       <div v-else class="w-full max-w-2xl">
-        <Form v-model="newModelForm.errors">
+        <Form v-model="newModelForm.errors" @submit="createModel">
           <template #content>
             <fwb-select
               v-model="newModelForm.brandId"
