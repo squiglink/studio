@@ -1,11 +1,4 @@
-<script setup lang="ts">
-import { initFlowbite } from "flowbite";
-import { onMounted } from "vue";
-
-onMounted(() => {
-  initFlowbite();
-});
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="bg-gray-900 h-full w-full">

@@ -5,6 +5,9 @@ import { useUserStore } from "../stores/user";
 import { useRouter } from "vue-router";
 import logo from "@/assets/logo.svg";
 
+const emit = defineEmits<{ close: [] }>();
+const props = defineProps<{ isOpen?: boolean }>();
+
 const authenticationStore = useAuthenticationStore();
 const router = useRouter();
 const userStore = useUserStore();
@@ -23,9 +26,17 @@ const logout = () => {
 </script>
 
 <template>
+  <div
+    v-if="props.isOpen"
+    class="fixed inset-0 z-30 bg-black/50 sm:hidden"
+    @click="emit('close')"
+  />
   <fwb-sidebar
     id="main-sidebar"
-    class="w-72 fixed top-0 left-0 z-40 border-solid border-r border-gray-700 transition-transform -translate-x-full sm:translate-x-0"
+    :class="[
+      'w-72 fixed top-0 left-0 z-40 border-solid border-r border-gray-700 transition-transform sm:translate-x-0',
+      props.isOpen ? 'translate-x-0' : '-translate-x-full',
+    ]"
   >
     <fwb-sidebar-logo
       name="Squiglink Studio"
