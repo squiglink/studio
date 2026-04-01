@@ -33,7 +33,12 @@ const fetchFailed = ref(false);
 
 const openAddMeasurementModal = () => {
   editingMeasurementId.value = null;
-  newMeasurement.value = { ...initialMeasurementFormState, leftChannel: [], rightChannel: [] };
+  newMeasurement.value = {
+    ...initialMeasurementFormState,
+    databaseId: databases.value[0]?.value ?? "",
+    leftChannel: [],
+    rightChannel: [],
+  };
   addMeasurementModalShown.value = true;
 };
 
