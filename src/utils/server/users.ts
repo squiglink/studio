@@ -5,6 +5,7 @@ export type ServerUser = {
   display_name: string;
   email: string;
   id: string;
+  role: string;
   scoring_system: string;
   updated_at: string;
   username: string;

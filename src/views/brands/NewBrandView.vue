@@ -1,13 +1,11 @@
 <script setup lang="ts">
+import Form from "@/components/Form.vue";
+import MainLayout from "@/layouts/MainLayout.vue";
+import type { ServerBrandPayload } from "@/utils/server/brands";
 import { brandsServer } from "@/utils/server/brands";
 import { ref } from "vue";
 import { toast } from "vue3-toastify";
 import { useRouter } from "vue-router";
-
-import type { ServerBrandPayload } from "@/utils/server/brands";
-
-import MainLayout from "@/layouts/MainLayout.vue";
-import Form from "@/components/Form.vue";
 
 const router = useRouter();
 

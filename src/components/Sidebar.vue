@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useAuthenticationStore } from "../stores/authentication";
 import { useUserStore } from "../stores/user";
 import { useRouter } from "vue-router";
@@ -16,6 +16,11 @@ const labLink = computed(() => {
   const base = import.meta.env.VITE_BASE_LAB_URL as string;
   const url = new URL(base);
   return `${url.protocol}//${userStore.username}.${url.host}`;
+});
+
+// TODO: Remove later.
+onMounted(() => {
+  if (!userStore.role) userStore.fetch();
 });
 
 const logout = () => {

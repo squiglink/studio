@@ -8,15 +8,21 @@ import type { ServerBrand } from "@/utils/server/brands";
 import MainLayout from "@/layouts/MainLayout.vue";
 import Table from "@/components/Table.vue";
 import NetworkError from "@/components/NetworkError.vue";
+import { useUserStore } from "@/stores/user";
 
 const route = useRoute();
+const userStore = useUserStore();
 
-const tableColumns = [
-  { name: "Brand", key: "name" },
+const tableColumns = computed<TableColumn[]>(() => [
+  {
+    name: "Brand",
+    key: "name",
+    ...(userStore.role === "root" ? { path: "/brands/", pathSuffix: "/edit" } : {}),
+  },
   { name: "Models", key: "model_count" },
   { name: "Created", key: "created_at" },
   { name: "Last modified", key: "updated_at" },
-];
+]);
 
 const brands = ref([] as ServerBrand[]);
 const pageCount = ref(1);

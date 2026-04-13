@@ -21,4 +21,14 @@ export const brandsServer = {
     const response = await serverClient.post<ServerBrand>("/brands", brand);
     return response.data;
   },
+
+  async edit(id: string, brand: ServerBrandPayload) {
+    const response = await serverClient.patch<ServerBrand>(`/brands/${id}`, brand);
+    return response.data;
+  },
+
+  async get(id: string) {
+    const response = await serverClient.get<ServerBrand>(`/brands/${id}`);
+    return response.data;
+  },
 };

@@ -2,6 +2,11 @@ import type { ServerBrand } from "./brands";
 import type { ServerPage } from "../ServerClient";
 import { serverClient } from "../ServerClient";
 
+export type ServerCreateModel = {
+  brand_id: string;
+  name: string;
+};
+
 export type ServerModel = {
   brand: ServerBrand;
   id: string;
@@ -9,9 +14,9 @@ export type ServerModel = {
   shop_url: string;
 };
 
-export type ServerCreateModel = {
-  brand_id: string;
-  name: string;
+export type ServerUpdateModel = {
+  brand_id?: string;
+  name?: string;
 };
 
 export type ServerModels = ServerPage<ServerModel>;
@@ -29,6 +34,11 @@ export const modelsServer = {
 
   async get(id: string) {
     const response = await serverClient.get<ServerModel>(`/models/${id}`);
+    return response.data;
+  },
+
+  async update(id: string, model: ServerUpdateModel) {
+    const response = await serverClient.patch<ServerModel>(`/models/${id}`, model);
     return response.data;
   },
 };

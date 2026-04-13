@@ -1,24 +1,25 @@
 <script setup lang="ts">
+import Dropzone from "@/components/Dropzone.vue";
+import Form from "@/components/Form.vue";
+import MainLayout from "@/layouts/MainLayout.vue";
+import NetworkError from "@/components/NetworkError.vue";
+import Separator from "@/components/Separator.vue";
+import SideModal from "@/components/SideModal.vue";
+import type { ServerEvaluation } from "@/utils/server/evaluations";
+import type { ServerMeasurement } from "@/utils/server/measurements";
+import { brandsServer } from "@/utils/server/brands";
+import { databasesServer } from "@/utils/server/databases";
+import { evaluationsServer } from "@/utils/server/evaluations";
+import { measurementsServer } from "@/utils/server/measurements";
+import { modelsServer } from "@/utils/server/models";
 import { onMounted, ref } from "vue";
 import { toast } from "vue3-toastify";
-import { useRouter, useRoute } from "vue-router";
-
-import MainLayout from "@/layouts/MainLayout.vue";
-import Form from "@/components/Form.vue";
-import SideModal from "@/components/SideModal.vue";
-import Separator from "@/components/Separator.vue";
-import Dropzone from "@/components/Dropzone.vue";
-import { databasesServer } from "@/utils/server/databases";
-import { brandsServer } from "@/utils/server/brands";
-import { modelsServer } from "@/utils/server/models";
-import { measurementsServer } from "@/utils/server/measurements";
-import type { ServerMeasurement } from "@/utils/server/measurements";
-import { evaluationsServer } from "@/utils/server/evaluations";
-import type { ServerEvaluation } from "@/utils/server/evaluations";
 import { useAuthenticationStore } from "@/stores/authentication";
-import NetworkError from "@/components/NetworkError.vue";
+import { useRoute, useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
 
 const authenticationStore = useAuthenticationStore();
+const userStore = useUserStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -157,6 +158,22 @@ const fetchModel = async () => {
   const model = await modelsServer.get(modelId);
   editModelForm.value.name = model.name;
   editModelForm.value.brandId = model.brand.id;
+};
+
+const saveModel = async () => {
+  saving.value = true;
+  try {
+    await modelsServer.update(modelId, {
+      name: editModelForm.value.name,
+      brand_id: editModelForm.value.brandId,
+    });
+    toast.success("Successfully updated the model.");
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to update the model.");
+  } finally {
+    saving.value = false;
+  }
 };
 
 const fetchEvaluation = async () => {
@@ -301,6 +318,15 @@ onMounted(async () => {
       >
         Back
       </fwb-button>
+      <fwb-button
+        v-if="userStore.role === 'root'"
+        color="default"
+        size="md"
+        @click="saveModel"
+        :disabled="saving"
+      >
+        {{ saving ? "Saving..." : "Save" }}
+      </fwb-button>
     </template>
 
     <template #content>
@@ -313,7 +339,7 @@ onMounted(async () => {
               :options="brands"
               label="Brand"
               placeholder="required"
-              disabled
+              :disabled="userStore.role !== 'root'"
             />
             <fwb-input
               label="Model name"
@@ -321,7 +347,7 @@ onMounted(async () => {
               placeholder="required"
               size="md"
               v-model="editModelForm.name"
-              disabled
+              :disabled="userStore.role !== 'root'"
             />
 
             <div>
