@@ -261,9 +261,12 @@ const saveEvaluation = async () => {
   try {
     if (existingEvaluation.value) {
       const updated = await evaluationsServer.update(existingEvaluation.value.id, {
-        review_score: newEvaluation.value.reviewScore,
-        review_url: newEvaluation.value.reviewUrl,
-        shop_url: newEvaluation.value.shopUrl,
+        review_score:
+          typeof newEvaluation.value.reviewScore === "number"
+            ? newEvaluation.value.reviewScore
+            : null,
+        review_url: newEvaluation.value.reviewUrl || null,
+        shop_url: newEvaluation.value.shopUrl || null,
       });
       existingEvaluation.value = updated;
       toast.success("Successfully updated the evaluation.");
