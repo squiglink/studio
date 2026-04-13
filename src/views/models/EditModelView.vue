@@ -400,7 +400,7 @@ onMounted(async () => {
               <fwb-card class="p-4 !max-w-full">
                 <div class="flex justify-end mb-6">
                   <fwb-button color="default" size="sm" @click="openAddEvaluationModal">
-                    {{ existingEvaluation ? "Update evaluation" : "Add evaluation" }}
+                    {{ existingEvaluation ? "Edit evaluation" : "Add evaluation" }}
                     <template #suffix>
                       <Icon icon="flowbite:plus-outline" width="16" height="16" />
                     </template>
@@ -487,7 +487,7 @@ onMounted(async () => {
 
       <SideModal v-model="addEvaluationModalShown">
         <template #header-text>
-          {{ existingEvaluation ? "Update evaluation" : "Add evaluation" }}
+          {{ existingEvaluation ? "Edit evaluation" : "Add evaluation" }}
         </template>
 
         <template #content>
