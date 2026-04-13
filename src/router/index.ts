@@ -14,6 +14,16 @@ const router = createRouter({
       component: () => import("../views/databases/DatabasesView.vue"),
     },
     {
+      path: "/databases/new",
+      name: "newDatabase",
+      component: () => import("../views/databases/NewDatabaseView.vue"),
+    },
+    {
+      path: "/databases/:id/edit",
+      name: "editDatabase",
+      component: () => import("../views/databases/EditDatabaseView.vue"),
+    },
+    {
       path: "/brands",
       name: "brands",
       component: () => import("../views/brands/BrandsView.vue"),

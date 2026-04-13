@@ -17,7 +17,7 @@ const pageCount = ref(1);
 const route = useRoute();
 const searchQuery = computed(() => (route.query.query ? String(route.query.query) : ""));
 const tableColumns = [
-  { name: "ID", key: "id" },
+  { name: "ID", key: "id", path: "/databases/", pathSuffix: "/edit" },
   { name: "Kind", key: "kind" },
   { name: "Path", key: "path" },
   { name: "Created", key: "created_at" },
@@ -64,7 +64,17 @@ onMounted(() => {
         :columns="tableColumns"
         :enable-search="true"
         :page-count="pageCount"
-      />
+        :selectable-rows="false"
+      >
+        <template #actions>
+          <fwb-button color="default" size="md" tag="router-link" :href="{ name: 'newDatabase' }">
+            Add new database
+            <template #suffix>
+              <Icon icon="flowbite:plus-outline" width="16" height="16" />
+            </template>
+          </fwb-button>
+        </template>
+      </Table>
     </template>
   </MainLayout>
 </template>
