@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "@fontsource/inter": "^5.2.6",
-    "@tailwindcss/vite": "^4.1.11",
+    "@tailwindcss/vite": "^4.2.3",
     "axios": "^1.15.0",
     "flowbite-vue": "^0.2.1",
     "pinia": "^3.0.3",
