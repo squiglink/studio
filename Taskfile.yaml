@@ -2,8 +2,8 @@ tasks:
   build:
     desc: Build the application.
     cmds:
-      - docker compose run --rm studio bun vue-tsc --noEmit
-      - docker compose run --rm studio bun vite build
+      - docker compose run --rm studio pnpm vue-tsc --noEmit
+      - docker compose run --rm studio pnpm vite build
 
   check:
     desc: Check everything.
@@ -16,32 +16,32 @@ tasks:
   check-formatting:
     desc: Check formatting.
     cmds:
-      - docker compose run --rm studio bun oxfmt --check {{.CLI_ARGS}}
+      - docker compose run --rm studio pnpm oxfmt --check {{.CLI_ARGS}}
 
   check-linting:
     desc: Check linting.
     cmds:
-      - docker compose run --rm studio bun oxlint --deny-warnings {{.CLI_ARGS}}
+      - docker compose run --rm studio pnpm oxlint --deny-warnings {{.CLI_ARGS}}
 
   check-tests:
     desc: Check tests.
     cmds:
-      - docker compose run --rm studio bun test src/ {{.CLI_ARGS}}
+      - docker compose run --rm studio pnpm vitest run {{.CLI_ARGS}}
 
   check-types:
     desc: Check types.
     cmds:
-      - docker compose run --rm studio bun vue-tsc --noEmit {{.CLI_ARGS}}
+      - docker compose run --rm studio pnpm vue-tsc --noEmit {{.CLI_ARGS}}
 
   fix-formatting:
     desc: Fix formatting.
     cmds:
-      - docker compose run --rm studio bun oxfmt --write {{.CLI_ARGS}}
+      - docker compose run --rm studio pnpm oxfmt --write {{.CLI_ARGS}}
 
   install-dependencies:
     desc: Install dependencies.
     cmds:
-      - docker compose run --rm studio bun install
+      - docker compose run --rm studio pnpm install
 
   list:
     aliases:

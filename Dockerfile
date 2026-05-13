@@ -1,6 +1,8 @@
 # Base
 
-FROM oven/bun:1.3.12-alpine AS base
+FROM node:26-alpine3.23 AS base
+
+RUN npm install --global pnpm@^11.1.0
 
 WORKDIR /studio
 
@@ -8,7 +10,7 @@ WORKDIR /studio
 
 FROM base AS development
 
-CMD ["bun", "vite"]
+CMD ["pnpm", "vite"]
 
 # Production
 
@@ -24,10 +26,10 @@ ENV VITE_BASE_SERVER_URL=${VITE_BASE_SERVER_URL}
 ENV VITE_CLOUDFLARE_TURNSTILE_ENABLED=${VITE_CLOUDFLARE_TURNSTILE_ENABLED}
 ENV VITE_CLOUDFLARE_TURNSTILE_SITE_KEY=${VITE_CLOUDFLARE_TURNSTILE_SITE_KEY}
 
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile && bun add --global serve
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile && npm install -g serve
 
 COPY . .
-RUN bun vue-tsc --noEmit && bun vite build
+RUN pnpm vue-tsc --noEmit && pnpm vite build
 
 CMD ["serve", "dist", "--single", "--listen", "8080"]
