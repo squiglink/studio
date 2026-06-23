@@ -23,7 +23,7 @@
     "@vue/test-utils": "^2.4.10",
     "@vue/tsconfig": "^0.9.1",
     "jsdom": "^29.1.1",
-    "oxfmt": "^0.49.0",
+    "oxfmt": "^0.56.0",
     "oxlint": "^1.64.0",
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3",
