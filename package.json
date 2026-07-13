@@ -7,7 +7,7 @@
     "@fontsource/inter": "^5.2.8",
     "@tailwindcss/vite": "^4.3.0",
     "axios": "^1.16.0",
-    "flowbite-vue": "^0.2.3",
+    "flowbite-vue": "^0.3.0",
     "pinia": "^3.0.4",
     "vue": "^3.5.34",
     "vue-router": "^5.0.6",
